@@ -1,0 +1,119 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// IMPORTANTE: troque pela sua Access Key gratuita em https://web3forms.com
+// (crie uma conta, cole seu email, copie a chave gerada).
+const WEB3FORMS_ACCESS_KEY = "COLE_SUA_ACCESS_KEY_AQUI";
+---
+
+<BaseLayout
+  title="Contato"
+  description="Solicite um orçamento ou tire dúvidas sobre desenvolvimento web e sistemas de trading algorítmico."
+>
+  <section class="section contact">
+    <div class="container contact__inner">
+      <div>
+        <span class="eyebrow">Vamos conversar</span>
+        <h1>Solicite um orçamento</h1>
+        <p>
+          Conte um pouco sobre o seu projeto — quanto mais contexto, mais rápido eu consigo
+          te responder com algo útil.
+        </p>
+
+        <ul class="contact__alt mono">
+          <li>Email: <a href="mailto:seuemail@exemplo.com">seuemail@exemplo.com</a></li>
+          <li>WhatsApp: <a href="https://wa.me/000000000000" target="_blank" rel="noreferrer">enviar mensagem</a></li>
+        </ul>
+      </div>
+
+      <form class="card contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+        <input type="hidden" name="subject" value="Novo contato via portfólio" />
+        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+        <label for="name">Nome</label>
+        <input id="name" name="name" type="text" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required />
+
+        <label for="budget">Faixa de orçamento (opcional)</label>
+        <select id="budget" name="budget">
+          <option value="">Prefiro não informar</option>
+          <option value="ate-1000">Até €1.000</option>
+          <option value="1000-3000">€1.000 – €3.000</option>
+          <option value="3000+">Acima de €3.000</option>
+        </select>
+
+        <label for="message">Sobre o projeto</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit" class="btn btn--primary">Enviar mensagem</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .contact__alt {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+  }
+
+  .contact__alt a {
+    color: var(--paper);
+  }
+
+  .contact-form {
+    padding: var(--space-8);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .contact-form label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--paper-dim);
+    margin-top: var(--space-3);
+  }
+
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    background: var(--ink-900);
+    border: 1px solid var(--ink-700);
+    border-radius: var(--radius);
+    color: var(--paper);
+    padding: 0.6rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+  }
+
+  .contact-form input:focus,
+  .contact-form select:focus,
+  .contact-form textarea:focus {
+    border-color: var(--amber);
+  }
+
+  .contact-form button {
+    margin-top: var(--space-6);
+    justify-self: start;
+  }
+
+  @media (max-width: 900px) {
+    .contact__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

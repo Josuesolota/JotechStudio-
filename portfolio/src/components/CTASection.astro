@@ -1,0 +1,44 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Tem um projeto em mente?",
+  description = "Vamos conversar sobre como transformar sua ideia em um produto funcional.",
+} = Astro.props;
+---
+
+<section class="cta section--tight">
+  <div class="container cta__inner">
+    <div>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+    <a href="/contato" class="btn btn--primary">Falar comigo →</a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    border-top: 1px solid var(--ink-700);
+    border-bottom: 1px solid var(--ink-700);
+    background: var(--ink-800);
+  }
+
+  .cta__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .cta h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  .cta p {
+    margin: 0;
+  }
+</style>

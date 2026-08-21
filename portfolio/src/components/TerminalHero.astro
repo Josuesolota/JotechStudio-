@@ -1,0 +1,114 @@
+---
+interface Props {
+  lines: { prompt: string; output: string }[];
+}
+const { lines } = Astro.props;
+---
+
+<div class="terminal card" role="img" aria-label="Terminal animado apresentando o perfil profissional">
+  <div class="terminal__titlebar">
+    <span class="dot dot--red"></span>
+    <span class="dot dot--amber"></span>
+    <span class="dot dot--green"></span>
+    <span class="mono terminal__title">session.log</span>
+  </div>
+  <div class="terminal__body mono" id="terminal-body">
+    {
+      lines.map((line) => (
+        <p class="terminal__line" data-prompt={line.prompt} data-output={line.output} />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .terminal {
+    max-width: 640px;
+    overflow: hidden;
+  }
+
+  .terminal__titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--ink-700);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot--red {
+    background: var(--signal-down);
+  }
+  .dot--amber {
+    background: var(--amber);
+  }
+  .dot--green {
+    background: var(--signal-up);
+  }
+
+  .terminal__title {
+    margin-left: var(--space-2);
+    font-size: 0.75rem;
+    color: var(--paper-dim);
+  }
+
+  .terminal__body {
+    padding: var(--space-6);
+    min-height: 220px;
+    font-size: 0.95rem;
+  }
+
+  .terminal__line {
+    margin: 0 0 var(--space-2);
+    color: var(--paper);
+    min-height: 1.4em;
+  }
+
+  .terminal__line::before {
+    content: attr(data-prompt) " ";
+    color: var(--amber);
+  }
+
+  @media (max-width: 720px) {
+    .terminal__body {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<script>
+  // Efeito de "digitação" — respeita prefers-reduced-motion (ver CSS global,
+  // mas aqui também verificamos via JS para pular a animação por completo).
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const container = document.getElementById("terminal-body");
+  const lineEls = Array.from(container?.querySelectorAll<HTMLElement>(".terminal__line") ?? []);
+
+  async function typeLine(el: HTMLElement) {
+    const output = el.dataset.output ?? "";
+    if (prefersReducedMotion) {
+      el.textContent = output;
+      return;
+    }
+    let i = 0;
+    while (i <= output.length) {
+      el.textContent = output.slice(0, i);
+      i++;
+      await new Promise((r) => setTimeout(r, 18));
+    }
+  }
+
+  async function run() {
+    for (const el of lineEls) {
+      await typeLine(el);
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+
+  if (lineEls.length) run();
+</script>

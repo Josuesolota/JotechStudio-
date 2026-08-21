@@ -1,0 +1,51 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="mono">© {year} — desenvolvido com Astro + Sanity</p>
+    <div class="site-footer__links">
+      <a href="/contato">Contato</a>
+      <a href="mailto:seuemail@exemplo.com">Email</a>
+      <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--ink-700);
+    padding-block: var(--space-8);
+    margin-top: var(--space-24);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .site-footer p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--paper-dim);
+  }
+
+  .site-footer__links {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .site-footer__links a {
+    color: var(--paper-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+  }
+
+  .site-footer__links a:hover {
+    color: var(--amber);
+  }
+</style>

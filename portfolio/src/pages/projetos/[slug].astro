@@ -1,0 +1,179 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CTASection from "../../components/CTASection.astro";
+import { sanityClient, urlFor } from "../../lib/sanity";
+import { ALL_SLUGS_QUERY, PROJECT_BY_SLUG_QUERY } from "../../lib/queries";
+import { renderCaseStudy } from "../../lib/portableText";
+import type { Project } from "../../types/project";
+
+export async function getStaticPaths() {
+  try {
+    const slugs = await sanityClient.fetch<{ slug: string }[]>(ALL_SLUGS_QUERY);
+    return slugs.map(({ slug }) => ({ params: { slug } }));
+  } catch (error) {
+    console.warn("[sanity] Não foi possível gerar rotas de projetos:", error);
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+const project = await sanityClient.fetch<Project | null>(PROJECT_BY_SLUG_QUERY, { slug });
+
+if (!project) {
+  return Astro.redirect("/projetos");
+}
+
+const caseStudyHTML = renderCaseStudy(project.caseStudy);
+
+const categoryLabels: Record<string, string> = {
+  "web-app": "Web App",
+  "fintech-trading": "Fintech / Trading",
+  automacao: "Automação",
+  "landing-page": "Landing Page",
+  outro: "Outro",
+};
+---
+
+<BaseLayout title={project.title} description={project.summary}>
+  <article class="section">
+    <div class="container project-detail">
+      <a href="/projetos" class="back-link mono">← Todos os projetos</a>
+
+      <div class="project-detail__categories">
+        {project.category?.map((c) => <span class="eyebrow">{categoryLabels[c] ?? c}</span>)}
+      </div>
+
+      <h1>{project.title}</h1>
+      <p class="project-detail__summary">{project.summary}</p>
+
+      <div class="project-detail__stack">
+        {project.techStack?.map((tech) => <span class="tag">{tech}</span>)}
+      </div>
+
+      <div class="project-detail__links">
+        {project.demoUrl && (
+          <a href={project.demoUrl} class="btn btn--primary" target="_blank" rel="noreferrer">
+            Ver demo →
+          </a>
+        )}
+        {project.repoUrl && (
+          <a href={project.repoUrl} class="btn" target="_blank" rel="noreferrer">
+            Repositório
+          </a>
+        )}
+      </div>
+
+      {
+        project.coverImage && (
+          <img
+            src={urlFor(project.coverImage).width(1200).url()}
+            alt={project.coverImage.alt ?? project.title}
+            class="project-detail__cover"
+          />
+        )
+      }
+
+      {
+        caseStudyHTML && (
+          <div class="project-detail__body" set:html={caseStudyHTML} />
+        )
+      }
+
+      {
+        project.gallery && project.gallery.length > 0 && (
+          <div class="project-detail__gallery">
+            {project.gallery.map((img) => (
+              <img src={urlFor(img).width(800).url()} alt={img.alt ?? ""} loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </article>
+
+  <CTASection
+    title="Gostou do que viu?"
+    description="Posso construir algo parecido — ou completamente diferente — para o seu projeto."
+  />
+</BaseLayout>
+
+<style>
+  .project-detail {
+    max-width: 48rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--paper-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .back-link:hover {
+    color: var(--amber);
+  }
+
+  .project-detail__categories {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .project-detail__summary {
+    font-size: 1.1rem;
+  }
+
+  .project-detail__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .project-detail__links {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .project-detail__cover {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--ink-700);
+    margin-bottom: var(--space-8);
+  }
+
+  .project-detail__body {
+    color: var(--paper);
+  }
+
+  .project-detail__body :global(p) {
+    color: var(--paper);
+    max-width: none;
+  }
+
+  .project-detail__body :global(h2),
+  .project-detail__body :global(h3) {
+    margin-top: var(--space-8);
+  }
+
+  .project-detail__body :global(img) {
+    width: 100%;
+    border-radius: var(--radius);
+    margin-block: var(--space-4);
+  }
+
+  .project-detail__gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .project-detail__gallery img {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--ink-700);
+  }
+</style>

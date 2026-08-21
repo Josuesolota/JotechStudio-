@@ -1,0 +1,65 @@
+---
+interface Props {
+  categories: { value: string; label: string }[];
+}
+const { categories } = Astro.props;
+---
+
+<div class="filter-bar mono" id="filter-bar" role="group" aria-label="Filtrar projetos por categoria">
+  <button class="filter-btn is-active" data-filter="all">Todos</button>
+  {categories.map((c) => (
+    <button class="filter-btn" data-filter={c.value}>{c.label}</button>
+  ))}
+</div>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--ink-700);
+    color: var(--paper-dim);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--amber);
+    color: var(--paper);
+  }
+
+  .filter-btn.is-active {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--ink-900);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  const bar = document.getElementById("filter-bar");
+  const buttons = Array.from(bar?.querySelectorAll<HTMLButtonElement>(".filter-btn") ?? []);
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-categories]"));
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      buttons.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const filter = btn.dataset.filter;
+
+      cards.forEach((card) => {
+        const cardCategories = (card.dataset.categories ?? "").split(",");
+        const show = filter === "all" || cardCategories.includes(filter ?? "");
+        card.style.display = show ? "" : "none";
+      });
+    });
+  });
+</script>

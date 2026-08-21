@@ -1,0 +1,96 @@
+---
+import { urlFor } from "../lib/sanity";
+import type { Project } from "../types/project";
+
+interface Props {
+  project: Pick<Project, "title" | "slug" | "summary" | "techStack" | "coverImage" | "category">;
+}
+const { project } = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  "web-app": "Web App",
+  "fintech-trading": "Fintech / Trading",
+  automacao: "Automação",
+  "landing-page": "Landing Page",
+  outro: "Outro",
+};
+---
+
+<a href={`/projetos/${project.slug.current}`} class="project-card card">
+  {
+    project.coverImage && (
+      <img
+        src={urlFor(project.coverImage).width(640).height(400).url()}
+        alt={project.coverImage.alt ?? project.title}
+        loading="lazy"
+        class="project-card__image"
+        width="640"
+        height="400"
+      />
+    )
+  }
+  <div class="project-card__body">
+    <div class="project-card__categories">
+      {project.category?.map((c) => <span class="eyebrow">{categoryLabels[c] ?? c}</span>)}
+    </div>
+    <h3>{project.title}</h3>
+    <p>{project.summary}</p>
+    <div class="project-card__stack">
+      {project.techStack?.slice(0, 4).map((tech) => <span class="tag">{tech}</span>)}
+    </div>
+  </div>
+</a>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--paper);
+    overflow: hidden;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--amber);
+    transform: translateY(-2px);
+  }
+
+  .project-card__image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--ink-700);
+  }
+
+  .project-card__body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .project-card__categories {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .project-card h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .project-card p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .project-card__stack {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: var(--space-2);
+  }
+</style>

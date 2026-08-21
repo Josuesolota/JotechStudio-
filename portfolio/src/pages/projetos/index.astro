@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import CategoryFilter from "../../components/CategoryFilter.astro";
+import CTASection from "../../components/CTASection.astro";
+import { safeFetch } from "../../lib/sanity";
+import { PROJECTS_LIST_QUERY } from "../../lib/queries";
+import type { Project } from "../../types/project";
+
+const projects = await safeFetch<Project[]>(PROJECTS_LIST_QUERY, {}, []);
+
+const categoryLabels: Record<string, string> = {
+  "web-app": "Web App",
+  "fintech-trading": "Fintech / Trading",
+  automacao: "Automação",
+  "landing-page": "Landing Page",
+  outro: "Outro",
+};
+
+const availableCategories = Array.from(
+  new Set(projects.flatMap((p) => p.category ?? []))
+).map((value) => ({ value, label: categoryLabels[value] ?? value }));
+---
+
+<BaseLayout
+  title="Projetos"
+  description="Portfólio de projetos web, automações e sistemas de trading algorítmico desenvolvidos sob medida."
+>
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Portfólio</span>
+      <h1>Projetos</h1>
+      <p>Uma seleção de trabalhos pessoais e para clientes — filtre por área de atuação.</p>
+
+      {availableCategories.length > 0 && <CategoryFilter categories={availableCategories} />}
+
+      {
+        projects.length > 0 ? (
+          <div class="projects-grid">
+            {projects.map((project) => (
+              <div data-categories={(project.category ?? []).join(",")}>
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>Nenhum projeto publicado ainda. Volte em breve.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+</style>

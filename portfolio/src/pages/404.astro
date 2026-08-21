@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Página não encontrada" description="Esta página não existe.">
+  <section class="section not-found">
+    <div class="container">
+      <p class="eyebrow mono">Erro 404</p>
+      <h1 class="mono">&gt; comando não encontrado</h1>
+      <p>A página que você procura não existe ou foi movida.</p>
+      <a href="/" class="btn btn--primary">Voltar ao início</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding-block: var(--space-24);
+  }
+</style>

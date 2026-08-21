@@ -1,0 +1,135 @@
+---
+const links = [
+  { href: "/projetos", label: "Projetos" },
+  { href: "/sobre", label: "Sobre" },
+  { href: "/servicos", label: "Serviços" },
+  { href: "/contato", label: "Contato" },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="logo mono" aria-label="Página inicial">
+      <span aria-hidden="true">&gt;_</span> portfolio
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+      <span class="visually-hidden">Abrir menu</span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="mono"
+            aria-current={currentPath.startsWith(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a href="/contato" class="btn btn--primary">Falar comigo</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(11, 14, 17, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--ink-700);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-4);
+  }
+
+  .logo {
+    text-decoration: none;
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .logo span {
+    color: var(--amber);
+  }
+
+  .primary-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .primary-nav a:not(.btn) {
+    color: var(--paper-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .primary-nav a:not(.btn):hover,
+  .primary-nav a:not(.btn)[aria-current="page"] {
+    color: var(--paper);
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-2);
+  }
+
+  .nav-toggle__bar {
+    width: 20px;
+    height: 2px;
+    background: var(--paper);
+  }
+
+  @media (max-width: 720px) {
+    .nav-toggle {
+      display: flex;
+    }
+
+    .primary-nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--ink-900);
+      border-bottom: 1px solid var(--ink-700);
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--space-6);
+      gap: var(--space-4);
+      display: none;
+    }
+
+    .primary-nav.is-open {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById("nav-toggle");
+  const nav = document.getElementById("primary-nav");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = nav?.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+  });
+</script>

@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+---
+
+<BaseLayout
+  title="Sobre"
+  description="Desenvolvedor full-stack com especialização em fintechs, trading algorítmico e integração com a API da Deriv."
+>
+  <section class="section">
+    <div class="container about">
+      <span class="eyebrow">Sobre mim</span>
+      <h1>Duas disciplinas, uma mesma lógica: sistemas que precisam funcionar sob pressão.</h1>
+
+      <p>
+        Sou desenvolvedor full-stack com foco em Python e TypeScript, e trader com experiência
+        prática em trading algorítmico, opções e forex — incluindo integrações diretas com a
+        API da corretora Deriv. Essa combinação é rara: a maioria dos devs nunca operou um
+        mercado, e a maioria dos traders não sabe programar a própria estratégia.
+      </p>
+
+      <p>
+        Trabalho com fintechs e plataformas de trading porque entendo os dois lados do
+        problema — a engenharia por trás do sistema e o comportamento real do mercado que ele
+        precisa suportar. Isso significa menos tempo explicando contexto e mais tempo
+        entregando algo que funciona.
+      </p>
+
+      <h2>Como trabalho</h2>
+      <ul class="about__list">
+        <li>Código limpo, tipado e testável — sigo as boas práticas e a documentação oficial de cada tecnologia.</li>
+        <li>Comunicação direta: sem jargão desnecessário, sem enrolação sobre prazos.</li>
+        <li>Entrego com UX/UI cuidado — performance técnica sem boa experiência não retém usuários.</li>
+      </ul>
+
+      <h2>Stack principal</h2>
+      <div class="about__stack">
+        <span class="tag">Python</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">React</span>
+        <span class="tag">Astro</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Deriv API</span>
+        <span class="tag">Trading Algorítmico</span>
+        <span class="tag">Sanity CMS</span>
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: 42rem;
+  }
+
+  .about__list {
+    padding-left: 1.2rem;
+    color: var(--paper-dim);
+  }
+
+  .about__list li {
+    margin-bottom: var(--space-3);
+  }
+
+  .about__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+</style>

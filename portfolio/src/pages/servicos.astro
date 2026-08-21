@@ -1,0 +1,119 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+
+const services = [
+  {
+    title: "Desenvolvimento Web Full-Stack",
+    description:
+      "Sites institucionais, dashboards, aplicações web e landing pages de alta conversão. Python, TypeScript, React e Astro.",
+  },
+  {
+    title: "Sistemas de Trading Algorítmico",
+    description:
+      "Bots e estratégias automatizadas, integração com a API da Deriv, backtesting e monitoramento de performance.",
+  },
+  {
+    title: "Automação de Processos",
+    description:
+      "Scripts e integrações que eliminam trabalho manual repetitivo — de scraping de dados a pipelines de notificação.",
+  },
+  {
+    title: "Consultoria Técnica",
+    description:
+      "Revisão de arquitetura, auditoria de código e orientação técnica para times ou fundadores não-técnicos.",
+  },
+];
+---
+
+<BaseLayout
+  title="Serviços"
+  description="Desenvolvimento web, automação e sistemas de trading algorítmico sob medida para fintechs e negócios digitais."
+>
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">O que eu faço</span>
+      <h1>Serviços</h1>
+      <p>Da concepção ao deploy — construção sob medida, sem pacotes engessados.</p>
+
+      <div class="services-grid">
+        {
+          services.map((service) => (
+            <div class="card service-card">
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="process card">
+        <h2>Como funciona</h2>
+        <ol class="process__list mono">
+          <li><strong>Briefing</strong> — entendemos o problema e o objetivo real do projeto.</li>
+          <li><strong>Proposta</strong> — escopo, prazo e valor claros, sem letras miúdas.</li>
+          <li><strong>Desenvolvimento</strong> — entregas incrementais, com você acompanhando o progresso.</li>
+          <li><strong>Deploy & suporte</strong> — publicação e acompanhamento pós-entrega.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <CTASection title="Pronto para começar?" description="Me conta o que você precisa e eu retorno com uma proposta." />
+</BaseLayout>
+
+<style>
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-6);
+    margin-block: var(--space-8);
+  }
+
+  .service-card {
+    padding: var(--space-6);
+  }
+
+  .service-card h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  .service-card p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .process {
+    padding: var(--space-8);
+    margin-top: var(--space-12);
+  }
+
+  .process__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+    counter-reset: step;
+  }
+
+  .process__list li {
+    padding-left: 2.5rem;
+    position: relative;
+    color: var(--paper-dim);
+    font-size: 0.9rem;
+  }
+
+  .process__list li::before {
+    counter-increment: step;
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  .process__list strong {
+    color: var(--paper);
+    font-family: var(--font-body);
+  }
+</style>
