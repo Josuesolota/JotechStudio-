@@ -6,6 +6,15 @@
 
 export const SITE = {
   name: "Jotech Studio",
+  /**
+   * Nome exibido sob o ícone quando a PWA é instalada (Android "short_name"
+   * do manifest, e "apple-mobile-web-app-title" no iOS). O espaço debaixo do
+   * ícone é curto e corta "Jotech Studio" a meio ("Jotech Stu…") — por isso
+   * aqui fica só a primeira palavra. Mantém-se em sincronia manual com
+   * "short_name" em public/manifest.webmanifest (esse ficheiro é estático,
+   * não lê este valor).
+   */
+  pwaShortName: "Jotech",
   tagline: "Automação · Inovação · Transformação",
   shortDescription:
     "Estúdio digital de Josué Solota: sites, landing pages, e-commerce e automações — com engenharia de nível fintech.",

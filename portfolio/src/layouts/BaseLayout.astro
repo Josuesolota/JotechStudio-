@@ -109,11 +109,12 @@ const jsonLd = {
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#04070f" />
     <meta name="color-scheme" content="dark" />
-    <meta name="application-name" content={SITE.name} />
+    <!-- Nome curto para caber sob o ícone (ver comentário em src/data/site.ts) -->
+    <meta name="application-name" content={SITE.pwaShortName} />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content={SITE.name} />
+    <meta name="apple-mobile-web-app-title" content={SITE.pwaShortName} />
     <meta name="msapplication-TileColor" content="#04070f" />
     <meta name="msapplication-TileImage" content="/icons/icon-144.png" />
 

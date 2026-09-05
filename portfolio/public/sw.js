@@ -15,7 +15,7 @@
   são limpas na ativação.
 */
 
-const SW_VERSION = "v1.0.0";
+const SW_VERSION = "v1.1.0";
 const SHELL_CACHE = `jotech-shell-${SW_VERSION}`;
 const PAGES_CACHE = `jotech-pages-${SW_VERSION}`;
 const ASSETS_CACHE = `jotech-assets-${SW_VERSION}`;

@@ -91,18 +91,25 @@ Os originais estão em `brand-source/`. Para gerar todos os tamanhos de novo
 
 ---
 
-## Projetos: CMS com rede de segurança
+## Projetos: dois catálogos, um site
 
-`src/lib/projects.ts` decide de onde vêm os projetos:
+`src/lib/projects.ts` junta **dois catálogos** de projetos:
 
-1. **Sanity tem projetos publicados** → são esses que aparecem;
-2. **Sanity vazio, sem `.env` ou indisponível** → entram os projetos de
-   `src/data/projects.ts`.
+1. **Sanity** — editável sem tocar em código, ideal para quem gere conteúdo
+   pelo Studio.
+2. **`src/data/projects.ts`** — projetos declarados diretamente no código,
+   úteis para adicionar um projeto rapidamente (ex.: via este assistente) sem
+   precisar de configurar o Sanity.
 
-Assim o portfólio **nunca aparece vazio** a um potencial cliente. Os cartões
-marcados com `kind: "concept"` mostram o selo *Conceito* — são peças de
-demonstração, não trabalhos de clientes. Substitua-os por cases reais à medida
-que os tiver.
+Os dois aparecem **juntos** na listagem e na Home (destaques), ordenados por
+data. Se o mesmo `slug` existir nos dois catálogos, o Sanity vence — é a fonte
+pensada para ser editada por fora do código. Assim o portfólio **nunca aparece
+vazio**, mesmo sem Sanity configurado.
+
+Os cartões marcados com `kind: "concept"` mostram o selo *Conceito* — são
+peças de demonstração, não trabalhos ou produtos reais. Substitua-os por cases
+reais à medida que os tiver. Um projeto local ganha destaque na Home ao
+marcar `featured: true`.
 
 ---
 
