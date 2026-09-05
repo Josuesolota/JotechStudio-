@@ -125,16 +125,17 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     ],
   },
   {
-    // Nota: este é o site de apresentação/conversão da Kairos — distinto da
-    // própria plataforma (app) Kairos, que é gerida separadamente no Sanity.
-    // Não reaproveitar o ícone/capa da Kairos aqui, para os dois projetos não
-    // parecerem visualmente duplicados; sem capa, o cartão usa o fallback com
-    // as iniciais.
+    // Nota: este é o site de apresentação/conversão da Kairos
+    // (landing-page-kairos-bay.vercel.app) — distinto da própria plataforma
+    // (app, em kairos-lemon-rho.vercel.app), que é gerida separadamente no
+    // Sanity. Não reaproveitar o ícone/capa da Kairos aqui, para os dois
+    // projetos não parecerem visualmente duplicados; sem capa, o cartão usa
+    // o fallback com as iniciais.
     title: "Kairos — Landing Page",
     slug: "kairos-landing-page",
     summary:
       "Página de apresentação e conversão da Kairos, plataforma de trading algorítmico na Deriv — o primeiro contacto de quem ainda não é utilizador, antes de entrar na app.",
-    category: ["landing-page", "fintech-trading", "web-app"],
+    category: ["landing-page", "fintech-trading"],
     techStack: ["TypeScript", "React", "Deriv API"],
     demoUrl: "https://landing-page-kairos-bay.vercel.app/",
     kind: "case",
@@ -150,7 +151,7 @@ export const LOCAL_PROJECTS: LocalProject[] = [
       {
         heading: "A solução",
         paragraphs: [
-          "Uma página dedicada, separada da app (kairos-bay.vercel.app), focada só em apresentar a proposta de valor: os 4 produtos de negociação, os robôs automáticos disponíveis, a execução em milissegundos e os mercados sintéticos da Deriv abertos 24/7. O caminho para criar conta — Deriv, Airtm ou diretamente na Kairos — fica sempre visível, sem obrigar a percorrer a app primeiro.",
+          "Uma página dedicada, separada da app (kairos-lemon-rho.vercel.app), focada só em apresentar a proposta de valor: os 4 produtos de negociação, os robôs automáticos disponíveis, a execução em milissegundos e os mercados sintéticos da Deriv abertos 24/7. O caminho para criar conta — Deriv, Airtm ou diretamente na Kairos — fica sempre visível, sem obrigar a percorrer a app primeiro.",
         ],
       },
       {
