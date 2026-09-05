@@ -1,10 +1,13 @@
 /**
  * Camada única de acesso a projetos.
  *
- * Regra: o Sanity manda. Se houver projetos publicados no CMS, são
- * esses que aparecem. Se o CMS estiver vazio ou indisponível (build
- * sem .env, por exemplo), caímos nos projetos locais de src/data —
- * o portfólio nunca aparece vazio a um potencial cliente.
+ * Regra: os dois catálogos aparecem JUNTOS — o Sanity (CMS) e os
+ * projetos declarados em src/data/projects.ts (adicionados por
+ * código). Isto permite publicar um projeto sem precisar de acesso
+ * ao Sanity Studio, e garante que o portfólio nunca aparece vazio.
+ *
+ * Em caso de colisão de slug, o Sanity vence — é a fonte de conteúdo
+ * pensada para ser editada sem tocar em código.
  */
 
 import { safeFetch, urlFor } from "./sanity";
@@ -90,20 +93,26 @@ function fromSanity(p: Project, bodyHtml?: string): ProjectView {
 const byDateDesc = (a: ProjectView, b: ProjectView) =>
   (b.publishedAt ?? "").localeCompare(a.publishedAt ?? "");
 
+/**
+ * Junta remotos + locais, sem duplicar slugs — o remoto vence o
+ * empate porque é a fonte editável sem tocar em código.
+ */
+function mergeBySlug(remote: ProjectView[], local: ProjectView[]): ProjectView[] {
+  const remoteSlugs = new Set(remote.map((p) => p.slug));
+  return [...remote, ...local.filter((p) => !remoteSlugs.has(p.slug))].sort(byDateDesc);
+}
+
 /** Todos os projetos para a página /projetos. */
 export async function getAllProjects(): Promise<ProjectView[]> {
   const remote = await safeFetch<Project[]>(PROJECTS_LIST_QUERY, {}, []);
-  if (remote.length > 0) return remote.map((p) => fromSanity(p)).sort(byDateDesc);
-  return LOCAL_PROJECTS.map(fromLocal).sort(byDateDesc);
+  return mergeBySlug(remote.map((p) => fromSanity(p)), LOCAL_PROJECTS.map(fromLocal));
 }
 
-/** Destaques para a Home (máx. 3). */
+/** Destaques para a Home (máx. 3): Sanity com featured=true + locais com featured:true. */
 export async function getFeaturedProjects(limit = 3): Promise<ProjectView[]> {
   const remote = await safeFetch<Project[]>(FEATURED_PROJECTS_QUERY, {}, []);
-  if (remote.length > 0) return remote.map((p) => fromSanity(p)).slice(0, limit);
-
-  const all = await getAllProjects();
-  return all.slice(0, limit);
+  const localFeatured = LOCAL_PROJECTS.filter((p) => p.featured).map(fromLocal);
+  return mergeBySlug(remote.map((p) => fromSanity(p)), localFeatured).slice(0, limit);
 }
 
 /** Slugs para getStaticPaths — junta CMS e locais, sem duplicados. */

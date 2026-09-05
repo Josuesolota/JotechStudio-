@@ -1,21 +1,23 @@
 /**
  * ─────────────────────────────────────────────────────────────
- * PROJETOS LOCAIS (fallback)
+ * PROJETOS LOCAIS
  * ─────────────────────────────────────────────────────────────
- * Porquê isto existe: o site lê os projetos do Sanity. Enquanto o
- * CMS não estiver configurado (ou estiver vazio), o portfólio
- * apareceria vazio — o pior cenário possível para quem vem avaliar
- * o seu trabalho. Estes projetos garantem que a página nunca fica
- * vazia.
+ * Porquê isto existe: o portfólio junta dois catálogos — os projetos
+ * publicados no Sanity e os declarados aqui. Isto permite adicionar
+ * um projeto diretamente por código (como este ficheiro) sem depender
+ * de acesso ao Sanity Studio, e garante que a lista nunca aparece
+ * vazia a um potencial cliente.
+ *
+ * PRIORIDADE: se um projeto existir nos dois catálogos com o mesmo
+ * `slug`, a versão do Sanity é que conta (ver src/lib/projects.ts).
+ * Fora isso, os dois catálogos aparecem juntos, ordenados por data.
  *
  * COMO USAR
- *  · `kind: "case"`    → trabalho real, entregue. Aparece sem selo.
+ *  · `kind: "case"`    → trabalho ou produto real. Aparece sem selo.
  *  · `kind: "concept"` → peça de demonstração/conceito. Aparece com
  *                        o selo "Conceito" — honestidade com quem visita.
- *
- * Assim que publicar projetos no Sanity, eles passam à frente destes
- * automaticamente (ver src/lib/projects.ts). Substitua/apague os
- * conceitos à medida que tiver cases reais.
+ *  · `featured: true`  → também entra na secção de destaque da Home
+ *                        (junto com os destaques marcados no Sanity).
  */
 
 import type { ProjectCategory } from "../types/project";
@@ -32,6 +34,8 @@ export interface LocalProject {
   demoUrl?: string;
   repoUrl?: string;
   kind: "case" | "concept";
+  /** Aparece também nos "Projetos em destaque" da Home. */
+  featured?: boolean;
   /** Case study em parágrafos simples (renderizado em /projetos/[slug]). */
   body?: { heading?: string; paragraphs: string[] }[];
   results?: string[];
@@ -51,6 +55,7 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     demoUrl: "https://jotechstudio.vercel.app",
     repoUrl: "https://github.com/Josuesolota/JotechStudio-",
     kind: "case",
+    featured: true,
     publishedAt: "2026-01-15",
     body: [
       {
@@ -80,32 +85,43 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     ],
   },
   {
-    title: "Painel de Trading — Deriv API",
-    slug: "painel-trading-deriv",
+    title: "Flash Trading",
+    slug: "flash-trading",
     summary:
-      "Conceito de dashboard em tempo real para acompanhamento de estratégias automatizadas: cotações via WebSocket, gestão de risco e histórico de operações.",
+      "App de negociação de opções profissional com login direto via Deriv, estratégias assistidas por IA e onboarding completo para quem ainda não tem conta.",
     category: ["fintech-trading", "web-app"],
-    techStack: ["TypeScript", "React", "Deriv API", "WebSocket", "Python"],
-    kind: "concept",
-    publishedAt: "2025-11-02",
+    techStack: ["TypeScript", "React", "Deriv API", "PWA"],
+    coverUrl: "/projects/flash-trading-cover.jpg",
+    coverAlt: "Ícone da Flash Trading — um raio em chamas laranja sobre fundo escuro",
+    demoUrl: "https://flash-trading.vercel.app/",
+    kind: "case",
+    featured: true,
+    publishedAt: "2026-05-20",
     body: [
       {
-        heading: "A ideia",
+        heading: "O problema",
         paragraphs: [
-          "Quem opera com bots precisa de ver, num só ecrã, o que a estratégia está a fazer e quanto risco está exposto — sem abrir cinco separadores.",
+          "Quem já opera na Deriv não quer criar mais uma conta nem reaprender uma interface do zero — quer entrar e negociar. E quem ainda não tem conta precisa de um caminho claro para abrir uma, sem se perder em páginas de ajuda.",
         ],
       },
       {
-        heading: "Como funciona",
+        heading: "A solução",
         paragraphs: [
-          "Ligação WebSocket à API da Deriv para cotações em tempo real, camada de gestão de risco que corta a operação ao atingir o limite diário definido, e registo de cada execução para análise posterior.",
+          "A Flash Trading autentica diretamente com a conta Deriv do utilizador, elimina o registo duplicado e centra a experiência em negociação de opções binárias com estratégias assistidas por IA. Para quem ainda não tem conta, o próprio ecrã inicial oferece o caminho de criação de conta Deriv e de abertura de carteira Airtm, sem sair da app.",
+          "A comunidade fica a um toque de distância — WhatsApp e Telegram integrados diretamente na tela principal, para dúvidas e sinais em tempo real.",
+        ],
+      },
+      {
+        heading: "O resultado",
+        paragraphs: [
+          "Uma app instalável (PWA) com o visual de assinatura da marca — o raio laranja — que reduz para um único ecrã a distância entre abrir a app e começar a operar.",
         ],
       },
     ],
     results: [
-      "Cotações em tempo real com reconexão automática",
-      "Stop diário automático por perda acumulada",
-      "Exportação do histórico para análise",
+      "Login direto com a conta Deriv, sem registo duplicado",
+      "Onboarding embutido para quem ainda não tem conta Deriv ou Airtm",
+      "Comunidade (WhatsApp/Telegram) integrada na tela principal",
     ],
   },
   {
