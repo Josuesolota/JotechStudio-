@@ -1,0 +1,86 @@
+---
+import { FAQ } from "../data/services";
+---
+
+<div class="faq">
+  {
+    FAQ.map((item, i) => (
+      <details class="faq__item" data-reveal style={`--reveal-delay:${i * 60}ms`} name="faq">
+        <summary>
+          <span>{item.question}</span>
+          <svg
+            class="faq__chevron"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </summary>
+        <p>{item.answer}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .faq__item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(12, 20, 36, 0.6);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  .faq__item[open] {
+    border-color: var(--line-strong);
+  }
+
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.02rem;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary:hover {
+    color: var(--brand-blue-soft);
+  }
+
+  .faq__chevron {
+    flex-shrink: 0;
+    color: var(--paper-faint);
+    transition: transform 0.25s ease;
+  }
+
+  .faq__item[open] .faq__chevron {
+    transform: rotate(180deg);
+  }
+
+  .faq__item p {
+    margin: 0;
+    padding: 0 var(--space-6) var(--space-6);
+    font-size: 0.94rem;
+    max-width: 68ch;
+  }
+</style>

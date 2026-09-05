@@ -1,96 +1,207 @@
 ---
-import { urlFor } from "../lib/sanity";
-import type { Project } from "../types/project";
+import Icon from "./Icon.astro";
+import { CATEGORY_LABELS, type ProjectView } from "../lib/projects";
 
 interface Props {
-  project: Pick<Project, "title" | "slug" | "summary" | "techStack" | "coverImage" | "category">;
+  project: ProjectView;
+  /** true na primeira dobra: carrega a imagem sem lazy-loading */
+  eager?: boolean;
+  /** Nível do título — mantém a hierarquia correta em cada contexto */
+  headingLevel?: 2 | 3;
 }
-const { project } = Astro.props;
+const { project, eager = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as "h2" | "h3";
 
-const categoryLabels: Record<string, string> = {
-  "web-app": "Web App",
-  "fintech-trading": "Fintech / Trading",
-  automacao: "Automação",
-  "landing-page": "Landing Page",
-  outro: "Outro",
-};
+// Sem imagem de capa → capa gerada a partir das iniciais do projeto.
+// Evita imagens genéricas de banco e mantém a identidade coerente.
+const initials = project.title
+  .replace(/[^\p{L}\p{N}\s]/gu, "")
+  .split(/\s+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((w) => w[0]?.toUpperCase())
+  .join("");
 ---
 
-<a href={`/projetos/${project.slug.current}`} class="project-card card">
-  {
-    project.coverImage && (
-      <img
-        src={urlFor(project.coverImage).width(640).height(400).url()}
-        alt={project.coverImage.alt ?? project.title}
-        loading="lazy"
-        class="project-card__image"
-        width="640"
-        height="400"
-      />
-    )
-  }
+<article class="project-card card card--interactive" data-categories={(project.category ?? []).join(",")}>
+  <a href={`/projetos/${project.slug}`} class="project-card__link">
+    <span class="visually-hidden">Ver o projeto {project.title}</span>
+  </a>
+
+  <div class="project-card__media">
+    {
+      project.coverUrl ? (
+        <img
+          src={project.coverUrl}
+          alt={project.coverAlt ?? project.title}
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          width="960"
+          height="600"
+        />
+      ) : (
+        <div class="project-card__fallback" aria-hidden="true">
+          <span class="project-card__initials">{initials}</span>
+        </div>
+      )
+    }
+    {project.kind === "concept" && <span class="project-card__flag mono">Conceito</span>}
+  </div>
+
   <div class="project-card__body">
-    <div class="project-card__categories">
-      {project.category?.map((c) => <span class="eyebrow">{categoryLabels[c] ?? c}</span>)}
+    <div class="project-card__cats">
+      {project.category?.map((c) => <span class="eyebrow">{CATEGORY_LABELS[c] ?? c}</span>)}
     </div>
-    <h3>{project.title}</h3>
+
+    <Heading class="project-card__title">{project.title}</Heading>
     <p>{project.summary}</p>
+
     <div class="project-card__stack">
       {project.techStack?.slice(0, 4).map((tech) => <span class="tag">{tech}</span>)}
+      {project.techStack?.length > 4 && <span class="tag">+{project.techStack.length - 4}</span>}
     </div>
+
+    <span class="project-card__more mono">
+      Ver o case <Icon name="arrow" size={15} />
+    </span>
   </div>
-</a>
+</article>
 
 <style>
   .project-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-    color: var(--paper);
     overflow: hidden;
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    isolation: isolate;
   }
 
-  .project-card:hover {
-    border-color: var(--amber);
-    transform: translateY(-2px);
+  /* Link "de cartão inteiro" — mantém a semântica (h3 + p) fora da âncora */
+  .project-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
   }
 
-  .project-card__image {
-    width: 100%;
+  .project-card__media {
+    position: relative;
     aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: var(--ink-900);
+  }
+
+  .project-card__media img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    display: block;
-    border-bottom: 1px solid var(--ink-700);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-card:hover .project-card__media img {
+    transform: scale(1.05);
+  }
+
+  .project-card__fallback {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(60% 80% at 20% 10%, rgba(47, 111, 224, 0.35), transparent 70%),
+      radial-gradient(60% 80% at 90% 90%, rgba(134, 196, 64, 0.22), transparent 70%),
+      linear-gradient(160deg, #0c1424, #04070f);
+  }
+
+  .project-card__fallback::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26, 39, 64, 0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 39, 64, 0.6) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent);
+  }
+
+  .project-card__initials {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .project-card__flag {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: rgba(4, 7, 15, 0.82);
+    border: 1px solid var(--line-strong);
+    color: var(--paper-dim);
+    backdrop-filter: blur(6px);
   }
 
   .project-card__body {
     padding: var(--space-6);
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    flex: 1;
   }
 
-  .project-card__categories {
+  .project-card__cats {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
     flex-wrap: wrap;
   }
 
-  .project-card h3 {
+  .project-card__cats .eyebrow {
+    margin-bottom: 0;
+    font-size: 0.68rem;
+  }
+
+  .project-card__title {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: 1.18rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
 
   .project-card p {
-    font-size: 0.9rem;
     margin: 0;
+    font-size: 0.92rem;
   }
 
   .project-card__stack {
     display: flex;
     gap: var(--space-2);
     flex-wrap: wrap;
-    margin-top: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  .project-card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--brand-blue-soft);
+    transition: gap 0.2s ease;
+  }
+
+  .project-card:hover .project-card__more {
+    gap: 0.75rem;
   }
 </style>

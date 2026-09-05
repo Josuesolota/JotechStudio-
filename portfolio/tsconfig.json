@@ -1,5 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "comment": "sanity-studio-schemas/ é código para colar no Sanity Studio (outro projeto), não faz parte do site — por isso fica fora do type-check.",
+  "exclude": ["dist", "sanity-studio-schemas"]
 }

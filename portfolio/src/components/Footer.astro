@@ -1,52 +1,213 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { CONTACT, NAV_LINKS, SITE } from "../data/site";
+import { SERVICES } from "../data/services";
 
-    ---
 const year = new Date().getFullYear();
+const socials = [
+  { href: CONTACT.github, label: "GitHub", icon: "github" },
+  { href: CONTACT.linkedin, label: "LinkedIn", icon: "linkedin" },
+  { href: CONTACT.whatsapp, label: "WhatsApp", icon: "whatsapp" },
+  { href: `mailto:${CONTACT.email}`, label: "Email", icon: "mail" },
+];
 ---
 
 <footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p class="mono">© {year} — Jotech Studio | Todos os direitos reservados</p>
-    <div class="site-footer__links">
-      <a href="/contato">Contato</a>
-      <a href="mailto:jotechstudio@gmail.com">Email</a>
-      <a href="https://github.com/Josuesolota/" target="_blank" rel="noreferrer">GitHub</a>
-      <a href="https://www.linkedin.com/in/josue-solota/" target="_blank" rel="noreferrer">LinkedIn</a>
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a href="/" aria-label="Jotech Studio — página inicial">
+          <Logo size="md" showTagline />
+        </a>
+        <p>{SITE.shortDescription}</p>
+        <ul class="socials" aria-label="Redes e contactos">
+          {
+            socials.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  aria-label={s.label}
+                  title={s.label}
+                  target={s.href.startsWith("http") ? "_blank" : undefined}
+                  rel={s.href.startsWith("http") ? "noreferrer" : undefined}
+                >
+                  <Icon name={s.icon} size={18} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <nav class="site-footer__col" aria-label="Navegação do rodapé">
+        <h2>Navegação</h2>
+        <ul>
+          <li><a href="/">Início</a></li>
+          {NAV_LINKS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <h2>Serviços</h2>
+        <ul>
+          {
+            SERVICES.filter((s) => s.featured).map((s) => (
+              <li>
+                <a href={`/servicos#${s.slug}`}>{s.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="site-footer__col">
+        <h2>Vamos falar</h2>
+        <ul>
+          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+          <li><a href={CONTACT.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a></li>
+          <li><span class="site-footer__note">{SITE.location}</span></li>
+        </ul>
+        <a href="/contato" class="btn btn--primary btn--sm site-footer__cta">
+          Pedir orçamento
+          <Icon name="arrow" size={16} />
+        </a>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="mono">© {year} {SITE.name} — Todos os direitos reservados.</p>
+      <p class="mono site-footer__built">
+        Construído com <a href="https://astro.build" target="_blank" rel="noreferrer">Astro</a> ·
+        instalável como app
+      </p>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--ink-700);
-    padding-block: var(--space-8);
     margin-top: var(--space-24);
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(12, 20, 36, 0.4), rgba(4, 7, 15, 0.9));
+    padding-block: var(--space-16) var(--space-8);
   }
 
-  .site-footer__inner {
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: var(--space-10);
+  }
+
+  .site-footer__brand p {
+    margin-top: var(--space-4);
+    font-size: 0.9rem;
+    max-width: 34ch;
+  }
+
+  .socials {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--space-4);
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: var(--space-5) 0 0;
   }
 
-  .site-footer p {
-    margin: 0;
-    font-size: 0.8rem;
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
     color: var(--paper-dim);
+    background: rgba(12, 20, 36, 0.7);
+    transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
   }
 
-  .site-footer__links {
-    display: flex;
-    gap: var(--space-4);
+  .socials a:hover {
+    color: var(--paper);
+    border-color: var(--brand-blue-soft);
+    transform: translateY(-2px);
   }
 
-  .site-footer__links a {
+  .site-footer__col h2 {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    margin-bottom: var(--space-4);
+  }
+
+  .site-footer__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .site-footer__col a {
     color: var(--paper-dim);
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    transition: color 0.18s ease;
   }
 
-  .site-footer__links a:hover {
-    color: var(--amber);
+  .site-footer__col a:hover {
+    color: var(--paper);
+  }
+
+  .site-footer__note {
+    font-size: 0.85rem;
+    color: var(--paper-faint);
+  }
+
+  .site-footer__cta {
+    margin-top: var(--space-5);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .site-footer__bottom p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--paper-faint);
+  }
+
+  .site-footer__built a {
+    color: var(--paper-dim);
+    text-decoration: none;
+  }
+
+  .site-footer__built a:hover {
+    color: var(--brand-blue-soft);
+  }
+
+  @media (max-width: 900px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .site-footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

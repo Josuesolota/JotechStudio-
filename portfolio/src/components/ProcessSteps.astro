@@ -1,0 +1,79 @@
+---
+import { PROCESS } from "../data/services";
+---
+
+<ol class="process">
+  {
+    PROCESS.map((step, i) => (
+      <li class="process__step" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+        <span class="process__num mono">{String(i + 1).padStart(2, "0")}</span>
+        <h3>{step.title}</h3>
+        <p>{step.description}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .process {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    gap: var(--space-6);
+    counter-reset: step;
+  }
+
+  .process__step {
+    position: relative;
+    padding: var(--space-6) var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(17, 29, 49, 0.7), rgba(12, 20, 36, 0.7));
+  }
+
+  /* Linha que liga os passos (apenas no desktop) */
+  .process__step::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--space-6) + 12px);
+    right: calc(var(--space-6) * -1);
+    width: var(--space-6);
+    height: 1px;
+    background: linear-gradient(90deg, var(--line-strong), transparent);
+  }
+
+  .process__step:last-child::after {
+    display: none;
+  }
+
+  .process__num {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 0.78rem;
+    color: #04070f;
+    background: var(--brand-gradient);
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+  }
+
+  .process__step h3 {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .process__step p {
+    margin: 0;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 900px) {
+    .process__step::after {
+      display: none;
+    }
+  }
+</style>

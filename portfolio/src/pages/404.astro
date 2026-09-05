@@ -1,21 +1,76 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { NAV_LINKS } from "../data/site";
 ---
 
-<BaseLayout title="Página não encontrada" description="Esta página não existe.">
-  <section class="section not-found">
+<BaseLayout
+  title="Página não encontrada"
+  description="Esta página não existe ou foi movida."
+  noindex
+>
+  <section class="section error-page">
     <div class="container">
-      <p class="eyebrow mono">Erro 404</p>
+      <span class="eyebrow">Erro 404</span>
       <h1 class="mono">&gt; comando não encontrado</h1>
-      <p>A página que você procura não existe ou foi movida.</p>
-      <a href="/" class="btn btn--primary">Voltar ao início</a>
+      <p class="lead">
+        A página que procura não existe, mudou de sítio ou nunca chegou a existir. Acontece.
+      </p>
+
+      <div class="error-page__actions">
+        <a href="/" class="btn btn--primary">
+          Voltar ao início
+          <Icon name="arrow" size={16} />
+        </a>
+        <a href="/contato" class="btn">Falar comigo</a>
+      </div>
+
+      <nav class="error-page__links" aria-label="Páginas principais">
+        {NAV_LINKS.map((l) => <a href={l.href} class="mono">{l.label}</a>)}
+      </nav>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .not-found {
+  .error-page {
     text-align: center;
-    padding-block: var(--space-24);
+    padding-block: clamp(var(--space-16), 12vh, var(--space-24));
+  }
+
+  .error-page .eyebrow {
+    justify-content: center;
+  }
+
+  .error-page p {
+    margin-inline: auto;
+  }
+
+  .error-page__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-8);
+  }
+
+  .error-page__links {
+    display: flex;
+    gap: var(--space-5);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .error-page__links a {
+    color: var(--paper-faint);
+    text-decoration: none;
+    font-size: 0.85rem;
+  }
+
+  .error-page__links a:hover {
+    color: var(--paper);
   }
 </style>

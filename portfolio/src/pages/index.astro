@@ -3,101 +3,354 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TerminalHero from "../components/TerminalHero.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import CTASection from "../components/CTASection.astro";
-import { safeFetch } from "../lib/sanity";
-import { FEATURED_PROJECTS_QUERY } from "../lib/queries";
-import type { Project } from "../types/project";
+import StatsBar from "../components/StatsBar.astro";
+import ProcessSteps from "../components/ProcessSteps.astro";
+import FaqList from "../components/FaqList.astro";
+import Icon from "../components/Icon.astro";
+import { getFeaturedProjects } from "../lib/projects";
+import { SERVICES } from "../data/services";
 
-const featuredProjects = await safeFetch<Project[]>(FEATURED_PROJECTS_QUERY, {}, []);
+const featured = await getFeaturedProjects(3);
+const services = SERVICES.filter((s) => s.featured).slice(0, 4);
 
 const heroLines = [
   { prompt: "$", output: "whoami" },
-  { prompt: ">", output: "Dev full-stack · especialista em Fintech & Trading Systems" },
+  { prompt: ">", output: "Josué Solota — dev full-stack & trader algorítmico" },
   { prompt: "$", output: "stack --core" },
-  { prompt: ">", output: "Python · TypeScript · Deriv API · Automação de estratégias" },
+  { prompt: ">", output: "TypeScript · Python · Astro · React · Deriv API" },
+  { prompt: "$", output: "build --for" },
+  { prompt: ">", output: "landing pages · e-commerce · web apps · automações" },
   { prompt: "$", output: "status" },
-  { prompt: ">", output: "disponível_para_novos_projetos: true ▮" },
+  { prompt: ">", output: "disponível_para_novos_projetos: true" },
+];
+
+const pillars = [
+  {
+    icon: "gauge",
+    title: "Performance a sério",
+    text: "Sites estáticos que carregam quase instantaneamente. Cada segundo a mais custa conversões — e dinheiro.",
+  },
+  {
+    icon: "sparkle",
+    title: "Design que vende",
+    text: "UX/UI pensado para guiar o visitante até à ação, não apenas para ficar bonito num portfólio.",
+  },
+  {
+    icon: "plug",
+    title: "Integrações reais",
+    text: "Pagamentos, CRMs, APIs de mercado, WhatsApp, email. O site conversa com as ferramentas que já usa.",
+  },
 ];
 ---
 
 <BaseLayout
-  title="Início"
-  description="Desenvolvedor full-stack especializado em plataformas fintech e sistemas de trading algorítmico. Veja projetos e solicite um orçamento."
+  title="Sites, E-commerce e Automações"
+  description="Jotech Studio — landing pages, sites institucionais, e-commerce, web apps e automações de trading. Desenvolvimento sob medida com engenharia de nível fintech."
 >
-  <section class="hero section">
+  <!-- ── HERO ─────────────────────────────────────────────── -->
+  <section class="hero">
     <div class="container hero__inner">
       <div class="hero__copy">
-        <span class="eyebrow">Freelancer · Dev + Trader Algorítmico</span>
-        <h1>Construo sistemas que operam mercados — e sites que operam vendas.</h1>
-        <p>
-          Desenvolvimento web e automações sob medida, com profundidade real em fintechs,
-          corretoras e trading algorítmico. Da ideia ao deploy, sem enrolação.
+        <span class="badge-live" data-reveal>
+          <span class="badge-live__dot"></span>
+          Disponível para novos projetos
+        </span>
+
+        <h1 data-reveal style="--reveal-delay:60ms">
+          Sites e sistemas que <span class="grad-text">trabalham</span> pelo seu negócio.
+        </h1>
+
+        <p class="lead" data-reveal style="--reveal-delay:120ms">
+          Sou o Josué Solota. Construo landing pages, lojas online, sites institucionais e
+          automações — com a mesma engenharia que uso em plataformas de trading, onde o
+          sistema não pode falhar.
         </p>
-        <div class="hero__actions">
-          <a href="/projetos" class="btn btn--primary">Ver projetos</a>
-          <a href="/contato" class="btn">Solicitar orçamento</a>
+
+        <div class="hero__actions" data-reveal style="--reveal-delay:180ms">
+          <a href="/contato" class="btn btn--primary">
+            Pedir orçamento
+            <Icon name="arrow" size={17} />
+          </a>
+          <a href="/projetos" class="btn">Ver projetos</a>
         </div>
+
+        <ul class="hero__marks" data-reveal style="--reveal-delay:240ms">
+          <li><Icon name="check" size={15} /> Proposta em 24h</li>
+          <li><Icon name="check" size={15} /> Código seu, sem dependência</li>
+          <li><Icon name="check" size={15} /> 30 dias de suporte incluído</li>
+        </ul>
       </div>
+
       <TerminalHero lines={heroLines} />
     </div>
   </section>
 
-  {
-    featuredProjects.length > 0 && (
-      <section class="section--tight">
-        <div class="container">
+  <StatsBar />
+
+  <!-- ── PILARES ──────────────────────────────────────────── -->
+  <section class="section--tight" aria-labelledby="pilares">
+    <div class="container">
+      <h2 id="pilares" class="visually-hidden">Porque trabalhar comigo</h2>
+      <div class="pillars">
+        {
+          pillars.map((p, i) => (
+            <div class="pillar" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span class="pillar__icon">
+                <Icon name={p.icon} size={20} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SERVIÇOS ─────────────────────────────────────────── -->
+  <section class="section--tight section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">O que construo</span>
+        <h2>Serviços</h2>
+        <p class="lead">
+          Do site de uma página ao sistema completo — sempre com escopo, prazo e valor
+          fechados antes de começar.
+        </p>
+      </div>
+
+      <div class="services">
+        {
+          services.map((s, i) => (
+            <a href={`/servicos#${s.slug}`} class="service card card--interactive" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+              <span class="service__icon">
+                <Icon name={s.icon} size={22} />
+              </span>
+              <h3>{s.title}</h3>
+              <p>{s.pitch}</p>
+              <span class="service__link mono">
+                Detalhes <Icon name="arrow" size={14} />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      <a href="/servicos" class="btn btn--ghost services__all" data-reveal>
+        Ver todos os serviços
+        <Icon name="arrow" size={16} />
+      </a>
+    </div>
+  </section>
+
+  <!-- ── PROJETOS ─────────────────────────────────────────── -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div>
           <span class="eyebrow">Trabalhos selecionados</span>
           <h2>Projetos em destaque</h2>
-          <div class="projects-grid">
-            {featuredProjects.map((project) => <ProjectCard project={project} />)}
-          </div>
         </div>
-      </section>
-    )
-  }
+        <a href="/projetos" class="btn btn--ghost btn--sm">
+          Ver todos
+          <Icon name="arrow" size={15} />
+        </a>
+      </div>
 
-  {
-    featuredProjects.length === 0 && (
-      <section class="section--tight">
-        <div class="container">
-          <span class="eyebrow">Trabalhos selecionados</span>
-          <h2>Projetos em breve</h2>
-          <p>
-            Ainda estou publicando os cases pelo painel de administração. Volte em breve ou
-            entre em contato para ver exemplos diretamente.
-          </p>
-        </div>
-      </section>
-    )
-  }
+      {
+        featured.length > 0 ? (
+          <div class="projects-grid">
+            {featured.map((project, i) => (
+              <div data-reveal style={`--reveal-delay:${i * 80}ms`}>
+                <ProjectCard project={project} eager={i === 0} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>Estou a publicar novos cases. Entretanto, fale comigo para ver exemplos diretamente.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ── PROCESSO ─────────────────────────────────────────── -->
+  <section class="section--tight section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Como trabalhamos</span>
+        <h2>Do primeiro contacto ao site no ar</h2>
+        <p class="lead">Quatro etapas claras. Você sabe sempre em que ponto está o projeto.</p>
+      </div>
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <!-- ── FAQ ──────────────────────────────────────────────── -->
+  <section class="section--tight">
+    <div class="container faq-wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Antes de perguntar</span>
+        <h2>Dúvidas frequentes</h2>
+      </div>
+      <FaqList />
+    </div>
+  </section>
 
   <CTASection />
 </BaseLayout>
 
 <style>
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding-block: clamp(var(--space-12), 7vw, var(--space-24));
+    overflow: hidden;
+  }
+
   .hero__inner {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: var(--space-16);
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(var(--space-8), 5vw, var(--space-16));
     align-items: center;
+  }
+
+  .hero h1 {
+    margin-block: var(--space-5) var(--space-4);
   }
 
   .hero__actions {
     display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-6);
+    gap: var(--space-3);
+    margin-top: var(--space-8);
     flex-wrap: wrap;
+  }
+
+  .hero__marks {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-8) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    font-size: 0.85rem;
+    color: var(--paper-dim);
+  }
+
+  .hero__marks li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .hero__marks :global(svg) {
+    color: var(--brand-green);
+  }
+
+  /* ── Pilares ──────────────────────────────────────────── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: var(--space-8);
+  }
+
+  .pillar h3 {
+    font-size: 1.08rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .pillar p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .pillar__icon,
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: var(--space-4);
+    color: var(--brand-blue-soft);
+    background: rgba(47, 111, 224, 0.12);
+    border: 1px solid rgba(79, 139, 245, 0.25);
+  }
+
+  /* ── Serviços ─────────────────────────────────────────── */
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+    gap: var(--space-5);
+  }
+
+  .service {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    text-decoration: none;
+    color: var(--paper);
+  }
+
+  .service h3 {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .service p {
+    font-size: 0.9rem;
+    flex: 1;
+  }
+
+  .service__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--brand-blue-soft);
+    transition: gap 0.2s ease;
+  }
+
+  .service:hover .service__link {
+    gap: 0.7rem;
+  }
+
+  .services__all {
+    margin-top: var(--space-8);
+  }
+
+  /* ── Projetos ─────────────────────────────────────────── */
+  .section-head--row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    max-width: none;
+  }
+
+  .section-head--row h2 {
+    margin-bottom: 0;
   }
 
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
     gap: var(--space-6);
-    margin-top: var(--space-8);
   }
 
-  @media (max-width: 900px) {
+  .faq-wrap {
+    max-width: 52rem;
+  }
+
+  @media (max-width: 940px) {
     .hero__inner {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .section-head--row {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

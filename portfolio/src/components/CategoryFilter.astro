@@ -5,12 +5,25 @@ interface Props {
 const { categories } = Astro.props;
 ---
 
-<div class="filter-bar mono" id="filter-bar" role="group" aria-label="Filtrar projetos por categoria">
-  <button class="filter-btn is-active" data-filter="all">Todos</button>
-  {categories.map((c) => (
-    <button class="filter-btn" data-filter={c.value}>{c.label}</button>
-  ))}
+<div
+  class="filter-bar"
+  id="filter-bar"
+  role="group"
+  aria-label="Filtrar projetos por categoria"
+  data-reveal
+>
+  <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">
+    Todos
+  </button>
+  {
+    categories.map((c) => (
+      <button class="filter-btn" type="button" data-filter={c.value} aria-pressed="false">
+        {c.label}
+      </button>
+    ))
+  }
 </div>
+<p class="filter-status visually-hidden" id="filter-status" role="status" aria-live="polite"></p>
 
 <style>
   .filter-bar {
@@ -21,45 +34,57 @@ const { categories } = Astro.props;
   }
 
   .filter-btn {
-    background: transparent;
-    border: 1px solid var(--ink-700);
+    background: rgba(12, 20, 36, 0.7);
+    border: 1px solid var(--line);
     color: var(--paper-dim);
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--radius);
-    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-family: var(--font-body);
     cursor: pointer;
-    font-family: var(--font-mono);
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
   }
 
   .filter-btn:hover {
-    border-color: var(--amber);
+    border-color: var(--brand-blue-soft);
     color: var(--paper);
   }
 
   .filter-btn.is-active {
-    background: var(--amber);
-    border-color: var(--amber);
-    color: var(--ink-900);
+    background: var(--brand-gradient);
+    border-color: transparent;
+    color: #04070f;
     font-weight: 600;
   }
 </style>
 
 <script>
   const bar = document.getElementById("filter-bar");
+  const status = document.getElementById("filter-status");
   const buttons = Array.from(bar?.querySelectorAll<HTMLButtonElement>(".filter-btn") ?? []);
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-categories]"));
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      buttons.forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      const filter = btn.dataset.filter;
+      const filter = btn.dataset.filter ?? "all";
 
-      cards.forEach((card) => {
-        const cardCategories = (card.dataset.categories ?? "").split(",");
-        const show = filter === "all" || cardCategories.includes(filter ?? "");
-        card.style.display = show ? "" : "none";
+      buttons.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle("is-active", active);
+        b.setAttribute("aria-pressed", String(active));
       });
+
+      let visible = 0;
+      cards.forEach((card) => {
+        const cats = (card.dataset.categories ?? "").split(",");
+        const show = filter === "all" || cats.includes(filter);
+        card.hidden = !show;
+        if (show) visible++;
+      });
+
+      if (status) {
+        status.textContent = `${visible} projeto${visible === 1 ? "" : "s"} em exibição.`;
+      }
     });
   });
 </script>

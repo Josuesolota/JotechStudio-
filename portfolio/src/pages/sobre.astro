@@ -1,48 +1,142 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CTASection from "../components/CTASection.astro";
+import Icon from "../components/Icon.astro";
+import { CONTACT, SITE } from "../data/site";
+
+const stack = [
+  { group: "Frontend", items: ["TypeScript", "React", "Astro", "HTML/CSS moderno", "UX/UI"] },
+  { group: "Backend", items: ["Python", "Node.js", "APIs REST", "WebSocket", "PostgreSQL"] },
+  { group: "Mercados", items: ["Deriv API", "Trading algorítmico", "Opções", "Forex", "Backtesting"] },
+  { group: "Produto", items: ["Sanity CMS", "Vercel", "SEO técnico", "Analytics", "PWA"] },
+];
+
+const principles = [
+  {
+    icon: "code",
+    title: "Código limpo e tipado",
+    text: "Sigo a documentação oficial de cada tecnologia e escrevo código que outra pessoa consegue manter. O projeto é seu — não fica refém de mim.",
+  },
+  {
+    icon: "sparkle",
+    title: "Design com intenção",
+    text: "Performance sem boa experiência não retém ninguém. Cada elemento no ecrã tem uma razão para estar lá.",
+  },
+  {
+    icon: "shield",
+    title: "Comunicação direta",
+    text: "Sem jargão desnecessário e sem prazos otimistas para agradar. Se algo não é boa ideia, digo-lhe antes de começar.",
+  },
+];
 ---
 
 <BaseLayout
   title="Sobre"
-  description="Desenvolvedor full-stack com especialização em fintechs, trading algorítmico e integração com a API da Deriv."
+  description="Josué Solota — desenvolvedor full-stack e trader algorítmico. Fintechs, sistemas de trading, integração com a API da Deriv e desenvolvimento web sob medida."
 >
   <section class="section">
-    <div class="container about">
-      <span class="eyebrow">Sobre mim</span>
-      <h1>Duas disciplinas, uma mesma lógica: sistemas que precisam funcionar sob pressão.</h1>
+    <div class="container">
+      <div class="intro">
+        <div class="intro__copy" data-reveal>
+          <span class="eyebrow">Sobre mim</span>
+          <h1>Duas disciplinas, a mesma lógica: sistemas que têm de funcionar sob pressão.</h1>
 
-      <p>
-        Sou desenvolvedor full-stack com foco em Python e TypeScript, e trader com experiência
-        prática em trading algorítmico, opções e forex — incluindo integrações diretas com a
-        API da corretora Deriv. Essa combinação é rara: a maioria dos devs nunca operou um
-        mercado, e a maioria dos traders não sabe programar a própria estratégia.
-      </p>
+          <p>
+            Sou o <strong>Josué Solota</strong>, fundador do Jotech Studio. Desenvolvo em
+            Python e TypeScript, e opero mercados — trading algorítmico, opções e forex,
+            incluindo integrações diretas com a API da corretora Deriv.
+          </p>
 
-      <p>
-        Trabalho com fintechs e plataformas de trading porque entendo os dois lados do
-        problema — a engenharia por trás do sistema e o comportamento real do mercado que ele
-        precisa suportar. Isso significa menos tempo explicando contexto e mais tempo
-        entregando algo que funciona.
-      </p>
+          <p>
+            Essa combinação é rara: a maioria dos programadores nunca operou um mercado, e a
+            maioria dos traders não sabe programar a própria estratégia. Trabalhar nos dois
+            lados ensinou-me uma coisa que aplico a todos os projetos, incluindo o site mais
+            simples: <strong>um sistema só vale o que aguenta quando está a valer.</strong>
+          </p>
 
-      <h2>Como trabalho</h2>
-      <ul class="about__list">
-        <li>Código limpo, tipado e testável — sigo as boas práticas e a documentação oficial de cada tecnologia.</li>
-        <li>Comunicação direta: sem jargão desnecessário, sem enrolação sobre prazos.</li>
-        <li>Entrego com UX/UI cuidado — performance técnica sem boa experiência não retém usuários.</li>
-      </ul>
+          <p>
+            Hoje aplico esse mesmo rigor a landing pages, lojas online, sites institucionais
+            e automações — para quem quer uma presença digital que não é só bonita, é rápida,
+            encontrável e que converte.
+          </p>
 
-      <h2>Stack principal</h2>
-      <div class="about__stack">
-        <span class="tag">Python</span>
-        <span class="tag">TypeScript</span>
-        <span class="tag">React</span>
-        <span class="tag">Astro</span>
-        <span class="tag">Node.js</span>
-        <span class="tag">Deriv API</span>
-        <span class="tag">Trading Algorítmico</span>
-        <span class="tag">Sanity CMS</span>
+          <div class="intro__actions">
+            <a href="/contato" class="btn btn--primary">
+              Falar comigo
+              <Icon name="arrow" size={16} />
+            </a>
+            <a href={CONTACT.github} class="btn" target="_blank" rel="noreferrer">
+              <Icon name="github" size={16} />
+              GitHub
+            </a>
+          </div>
+        </div>
+
+        <aside class="intro__card card" data-reveal style="--reveal-delay:120ms">
+          <img src="/icons/icon-256.png" alt="" width="88" height="88" class="intro__avatar" />
+          <h2>{SITE.founder}</h2>
+          <p class="intro__role mono">{SITE.role}</p>
+          <ul class="intro__facts">
+            <li><Icon name="check" size={15} /> {SITE.location}</li>
+            <li><Icon name="check" size={15} /> Trabalho em português e inglês</li>
+            <li><Icon name="check" size={15} /> Resposta em menos de 24 horas</li>
+          </ul>
+          <a href={`mailto:${CONTACT.email}`} class="btn btn--sm btn--block">
+            <Icon name="mail" size={15} />
+            {CONTACT.email}
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Princípios</span>
+        <h2>Como trabalho</h2>
+      </div>
+
+      <div class="principles">
+        {
+          principles.map((p, i) => (
+            <div class="principle" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span class="principle__icon">
+                <Icon name={p.icon} size={20} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Ferramentas</span>
+        <h2>Stack principal</h2>
+        <p class="lead">
+          Escolho a tecnologia depois de perceber o problema — estas são as que domino e uso
+          no dia a dia.
+        </p>
+      </div>
+
+      <div class="stack">
+        {
+          stack.map((group, i) => (
+            <div class="stack__group" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+              <h3 class="mono">{group.group}</h3>
+              <div class="stack__tags">
+                {group.items.map((item) => (
+                  <span class="tag">{item}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -51,22 +145,130 @@ import CTASection from "../components/CTASection.astro";
 </BaseLayout>
 
 <style>
-  .about {
-    max-width: 42rem;
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) 320px;
+    gap: var(--space-12);
+    align-items: start;
   }
 
-  .about__list {
-    padding-left: 1.2rem;
+  .intro__copy h1 {
+    margin-bottom: var(--space-6);
+  }
+
+  .intro__actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-8);
+  }
+
+  .intro__card {
+    padding: var(--space-8);
+    text-align: left;
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+  }
+
+  .intro__avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    margin-bottom: var(--space-5);
+    box-shadow: 0 0 26px -10px rgba(47, 111, 224, 0.9);
+  }
+
+  .intro__card h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .intro__role {
+    font-size: 0.78rem;
+    color: var(--brand-cyan);
+    margin-bottom: var(--space-5);
+  }
+
+  .intro__facts {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-6);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .intro__facts li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: 0.86rem;
     color: var(--paper-dim);
   }
 
-  .about__list li {
-    margin-bottom: var(--space-3);
+  .intro__facts :global(svg) {
+    color: var(--brand-green);
+    flex-shrink: 0;
+    margin-top: 3px;
   }
 
-  .about__stack {
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: var(--space-8);
+  }
+
+  .principle__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: var(--space-4);
+    color: var(--brand-blue-soft);
+    background: rgba(47, 111, 224, 0.12);
+    border: 1px solid rgba(79, 139, 245, 0.25);
+  }
+
+  .principle h3 {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .principle p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    gap: var(--space-8);
+  }
+
+  .stack__group h3 {
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    font-weight: 400;
+    margin-bottom: var(--space-4);
+  }
+
+  .stack__tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+  }
+
+  @media (max-width: 900px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+
+    .intro__card {
+      position: static;
+      max-width: 26rem;
+    }
   }
 </style>

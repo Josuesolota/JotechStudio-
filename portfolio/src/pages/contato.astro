@@ -1,118 +1,355 @@
- ---
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import FaqList from "../components/FaqList.astro";
+import { CONTACT, SITE } from "../data/site";
+import { SERVICES } from "../data/services";
 
-// IMPORTANTE: troque pela sua Access Key gratuita em https://web3forms.com
-// (crie uma conta, cole seu email, copie a chave gerada).
+// Chave pública do Web3Forms (é pública por design — identifica o
+// destinatário do formulário, não dá acesso a nada).
 const WEB3FORMS_ACCESS_KEY = "4f3ac30b-9f13-4b79-90bd-2736c2396e99";
 ---
 
 <BaseLayout
   title="Contato"
-  description="Solicite um orçamento ou tire dúvidas sobre desenvolvimento web e sistemas de trading algorítmico."
+  description="Peça um orçamento para o seu site, loja online, web app ou automação. Resposta em menos de 24 horas."
 >
-  <section class="section contact">
-    <div class="container contact__inner">
-      <div>
-        <span class="eyebrow">Vamos conversar</span>
-        <h1>Solicite um orçamento</h1>
-        <p>
-          Conte um pouco sobre o seu projeto — quanto mais contexto, mais rápido eu consigo
-          te responder com algo útil.
-        </p>
+  <section class="section">
+    <div class="container contact">
+      <div class="contact__aside">
+        <header data-reveal>
+          <span class="eyebrow">Vamos conversar</span>
+          <h1>Conte-me sobre o seu projeto</h1>
+          <p class="lead">
+            Quanto mais contexto der, mais útil será a minha resposta. Recebe uma proposta com
+            escopo, prazo e valor — sem custo e sem compromisso.
+          </p>
+        </header>
 
-        <ul class="contact__alt mono">
-          <li>Email: <a href="mailto:jotechstudio@gmail.com">jotechstudio@gmail.com</a></li>
-          <li>WhatsApp: <a href="https://wa.me/message/THY2DHHOV5AJA1" target="_blank" rel="noreferrer">enviar mensagem</a></li>
+        <ul class="channels" data-reveal style="--reveal-delay:100ms">
+          <li>
+            <a href={`mailto:${CONTACT.email}`}>
+              <span class="channels__icon"><Icon name="mail" size={18} /></span>
+              <span>
+                <strong>Email</strong>
+                <em>{CONTACT.email}</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href={CONTACT.whatsapp} target="_blank" rel="noreferrer">
+              <span class="channels__icon"><Icon name="whatsapp" size={18} /></span>
+              <span>
+                <strong>WhatsApp</strong>
+                <em>Resposta rápida em horário útil</em>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href={CONTACT.linkedin} target="_blank" rel="noreferrer">
+              <span class="channels__icon"><Icon name="linkedin" size={18} /></span>
+              <span>
+                <strong>LinkedIn</strong>
+                <em>Ligar-se profissionalmente</em>
+              </span>
+            </a>
+          </li>
         </ul>
+
+        <div class="promise card" data-reveal style="--reveal-delay:160ms">
+          <h2 class="mono promise__title">O que acontece a seguir</h2>
+          <ol class="promise__list">
+            <li>Leio o seu pedido e respondo em menos de 24 horas.</li>
+            <li>Se fizer sentido, marcamos 30 minutos de conversa.</li>
+            <li>Recebe a proposta por escrito, com valor fechado.</li>
+          </ol>
+          <p class="promise__note mono">{SITE.location}</p>
+        </div>
       </div>
 
-      <form class="card contact-form" action="https://api.web3forms.com/submit" method="POST">
+      <form
+        class="card contact-form"
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        data-reveal
+        style="--reveal-delay:80ms"
+      >
         <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-        <input type="hidden" name="subject" value="Novo contato via portfólio" />
-        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+        <input type="hidden" name="subject" value="Novo pedido de orçamento — Jotech Studio" />
+        <input type="hidden" name="from_name" value="Site Jotech Studio" />
+        {/* Honeypot anti-spam do Web3Forms — tem de ficar oculto com display:none
+            (é assim que a documentação oficial o define). */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          style="display: none;"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
 
-        <label for="name">Nome</label>
-        <input id="name" name="name" type="text" required />
+        <div class="field">
+          <label for="name">Nome <span aria-hidden="true">*</span></label>
+          <input id="name" name="name" type="text" required autocomplete="name" placeholder="Como se chama?" />
+        </div>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required />
+        <div class="field">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="para onde envio a resposta"
+          />
+        </div>
 
-        <label for="budget">Faixa de orçamento (opcional)</label>
-        <select id="budget" name="budget">
-          <option value="">Prefiro não informar</option>
-          <option value="ate-1000">Até €1.000</option>
-          <option value="1000-3000">€1.000 – €3.000</option>
-          <option value="3000+">Acima de €3.000</option>
-        </select>
+        <div class="field">
+          <label for="service">Tipo de projeto</label>
+          <select id="service" name="service">
+            <option value="">Ainda não sei / outro</option>
+            {SERVICES.map((s) => <option value={s.slug}>{s.title}</option>)}
+          </select>
+        </div>
 
-        <label for="message">Sobre o projeto</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
+        <div class="field-row">
+          <div class="field">
+            <label for="budget">Orçamento previsto</label>
+            <select id="budget" name="budget">
+              <option value="">Prefiro não informar</option>
+              <option value="ate-1000">Até €1.000</option>
+              <option value="1000-3000">€1.000 – €3.000</option>
+              <option value="3000-7000">€3.000 – €7.000</option>
+              <option value="7000+">Acima de €7.000</option>
+            </select>
+          </div>
 
-        <button type="submit" class="btn btn--primary">Enviar mensagem</button>
+          <div class="field">
+            <label for="deadline">Prazo desejado</label>
+            <select id="deadline" name="deadline">
+              <option value="">Flexível</option>
+              <option value="urgente">O mais rápido possível</option>
+              <option value="1-mes">Até 1 mês</option>
+              <option value="3-meses">Nos próximos 3 meses</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message">Sobre o projeto <span aria-hidden="true">*</span></label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            required
+            placeholder="O que quer construir, para quem, e o que conta como sucesso. Links de referência ajudam muito."
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--block">
+          Enviar pedido
+          <Icon name="arrow" size={17} />
+        </button>
+
+        <p class="form-note">
+          Os seus dados são usados apenas para responder a este pedido. Sem newsletters, sem
+          partilha com terceiros.
+        </p>
       </form>
+    </div>
+  </section>
+
+  <section class="section--tight section--alt">
+    <div class="container faq-wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Antes de enviar</span>
+        <h2>Talvez já tenha resposta</h2>
+      </div>
+      <FaqList />
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .contact__inner {
+  .contact {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-16);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(var(--space-8), 5vw, var(--space-16));
     align-items: start;
   }
 
-  .contact__alt {
+  /* ── Canais de contacto ───────────────────────────────── */
+  .channels {
     list-style: none;
     padding: 0;
-    margin-top: var(--space-6);
+    margin: var(--space-8) 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .channels a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: rgba(12, 20, 36, 0.5);
+    text-decoration: none;
+    color: var(--paper);
+    transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+  }
+
+  .channels a:hover {
+    border-color: var(--brand-blue-soft);
+    background: rgba(47, 111, 224, 0.08);
+    transform: translateX(3px);
+  }
+
+  .channels__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    color: var(--brand-blue-soft);
+    background: rgba(47, 111, 224, 0.12);
+    border: 1px solid rgba(79, 139, 245, 0.25);
+  }
+
+  .channels strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .channels em {
+    display: block;
+    font-style: normal;
+    font-size: 0.82rem;
+    color: var(--paper-dim);
+    word-break: break-word;
+  }
+
+  /* ── Promessa ─────────────────────────────────────────── */
+  .promise {
+    padding: var(--space-6);
+  }
+
+  .promise__title {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    font-weight: 400;
+    margin-bottom: var(--space-4);
+  }
+
+  .promise__list {
+    margin: 0;
+    padding-left: 1.1rem;
     display: grid;
     gap: var(--space-2);
+    color: var(--paper-dim);
     font-size: 0.9rem;
   }
 
-  .contact__alt a {
-    color: var(--paper);
+  .promise__list::marker {
+    color: var(--brand-green);
   }
 
+  .promise__note {
+    margin: var(--space-5) 0 0;
+    font-size: 0.75rem;
+    color: var(--paper-faint);
+  }
+
+  /* ── Formulário ───────────────────────────────────────── */
   .contact-form {
-    padding: var(--space-8);
+    padding: clamp(var(--space-6), 3vw, var(--space-8));
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .field {
     display: grid;
     gap: var(--space-2);
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
   }
 
   .contact-form label {
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--paper-dim);
-    margin-top: var(--space-3);
+  }
+
+  .contact-form label span {
+    color: var(--brand-green);
   }
 
   .contact-form input,
   .contact-form select,
   .contact-form textarea {
-    background: var(--ink-900);
-    border: 1px solid var(--ink-700);
-    border-radius: var(--radius);
+    width: 100%;
+    background: rgba(4, 7, 15, 0.85);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
     color: var(--paper);
-    padding: 0.6rem 0.75rem;
+    padding: 0.75rem 0.9rem;
     font-family: var(--font-body);
     font-size: 0.95rem;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .contact-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder {
+    color: var(--paper-faint);
   }
 
   .contact-form input:focus,
   .contact-form select:focus,
   .contact-form textarea:focus {
-    border-color: var(--amber);
+    outline: none;
+    border-color: var(--brand-blue-soft);
+    box-shadow: 0 0 0 3px rgba(47, 111, 224, 0.18);
   }
 
   .contact-form button {
-    margin-top: var(--space-6);
-    justify-self: start;
+    margin-top: var(--space-3);
+  }
+
+  .form-note {
+    margin: 0;
+    font-size: 0.76rem;
+    color: var(--paper-faint);
+    text-align: center;
+  }
+
+  .faq-wrap {
+    max-width: 52rem;
   }
 
   @media (max-width: 900px) {
-    .contact__inner {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 460px) {
+    .field-row {
       grid-template-columns: 1fr;
     }
   }

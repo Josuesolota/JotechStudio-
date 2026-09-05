@@ -1,6 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="#0B0E11"/>
-  <path d="M9 11L5 16L9 21" stroke="#FFB020" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M23 11L27 16L23 21" stroke="#FFB020" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <line x1="16" y1="9" x2="16" y2="23" stroke="#E8E6E1" stroke-width="2.2" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jotech Studio">
+  <defs>
+    <linearGradient id="jt" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2F6FE0"/>
+      <stop offset="0.55" stop-color="#22A7C9"/>
+      <stop offset="1" stop-color="#86C440"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#04070F"/>
+  <!-- engrenagem: 12 dentes -->
+  <g fill="none" stroke="url(#jt)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="32" r="17" stroke-width="4"/>
+    <circle cx="32" cy="32" r="8" stroke-width="3"/>
+    <g stroke-width="4">
+      <path d="M32 9v5M32 50v5M9 32h5M50 32h5"/>
+      <path d="M15.8 15.8l3.6 3.6M44.6 44.6l3.6 3.6M48.2 15.8l-3.6 3.6M19.4 44.6l-3.6 3.6"/>
+    </g>
+  </g>
+  <!-- traços de circuito -->
+  <g stroke="#86C440" stroke-width="2.4" stroke-linecap="round" opacity="0.9">
+    <path d="M26 30h6"/>
+    <path d="M32 34h6"/>
+  </g>
 </svg>

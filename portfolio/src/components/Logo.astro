@@ -1,0 +1,111 @@
+---
+/**
+ * Assinatura da marca: engrenagem (ícone oficial) + wordmark com o
+ * gradiente azul → verde do logo. Usado no header e no footer.
+ */
+interface Props {
+  size?: "sm" | "md";
+  showTagline?: boolean;
+  class?: string;
+}
+const { size = "sm", showTagline = false, class: className } = Astro.props;
+---
+
+<span class:list={["logo", `logo--${size}`, className]}>
+  <img
+    src="/icons/icon-96.png"
+    alt=""
+    width="36"
+    height="36"
+    class="logo__mark"
+    loading="eager"
+    decoding="async"
+  />
+  <span class="logo__text">
+    <span class="logo__name">
+      <span class="logo__jo">Jotech</span> <span class="logo__studio">Studio</span>
+    </span>
+    {showTagline && <span class="logo__tagline mono">Automação · Inovação · Transformação</span>}
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--paper);
+  }
+
+  .logo__mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    box-shadow: 0 0 18px -6px rgba(47, 111, 224, 0.8);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  :global(a:hover) .logo__mark,
+  :global(a:focus-visible) .logo__mark {
+    transform: rotate(30deg);
+    box-shadow: 0 0 22px -4px rgba(79, 139, 245, 0.95);
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .logo__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .logo__jo {
+    background: linear-gradient(95deg, #2f6fe0, #22a7c9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .logo__studio {
+    color: var(--brand-green);
+  }
+
+  .logo__tagline {
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    white-space: nowrap;
+  }
+
+  .logo--md .logo__mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+  }
+
+  .logo--md .logo__name {
+    font-size: 1.35rem;
+  }
+
+  .logo--md .logo__tagline {
+    font-size: 0.65rem;
+  }
+
+  /* Em ecrãs estreitos a tagline empurraria o header para duas linhas */
+  @media (max-width: 480px) {
+    .logo--sm .logo__tagline {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+/**
+ * PWA — registo do service worker + convite de instalação.
+ *
+ * O botão só aparece quando o browser dispara `beforeinstallprompt`
+ * (Chrome/Edge/Android). Em iOS mostramos instruções, porque o Safari
+ * não expõe esse evento. Quem já tem a app instalada nunca vê nada.
+ */
+import Icon from "./Icon.astro";
+---
+
+<div class="pwa-prompt" id="pwa-prompt" hidden>
+  <img src="/icons/icon-96.png" alt="" width="44" height="44" class="pwa-prompt__icon" />
+  <div class="pwa-prompt__copy">
+    <strong>Instalar Jotech Studio</strong>
+    <span id="pwa-prompt-text">Acesso rápido, ecrã inteiro e funciona offline.</span>
+  </div>
+  <div class="pwa-prompt__actions">
+    <button type="button" class="btn btn--primary btn--sm" id="pwa-install">
+      <Icon name="download" size={15} />
+      Instalar
+    </button>
+    <button type="button" class="pwa-prompt__close" id="pwa-dismiss" aria-label="Dispensar convite">
+      ✕
+    </button>
+  </div>
+</div>
+
+<style>
+  .pwa-prompt {
+    position: fixed;
+    left: 50%;
+    bottom: max(var(--space-4), env(safe-area-inset-bottom));
+    transform: translate(-50%, 140%);
+    z-index: 120;
+    width: min(560px, calc(100vw - var(--space-8)));
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: rgba(7, 12, 24, 0.96);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-glow);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pwa-prompt.is-visible {
+    transform: translate(-50%, 0);
+  }
+
+  .pwa-prompt__icon {
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .pwa-prompt__copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pwa-prompt__copy strong {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+  }
+
+  .pwa-prompt__copy span {
+    font-size: 0.82rem;
+    color: var(--paper-dim);
+  }
+
+  .pwa-prompt__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .pwa-prompt__close {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--paper-dim);
+    border-radius: var(--radius-sm);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .pwa-prompt__close:hover {
+    color: var(--paper);
+    border-color: var(--line-strong);
+  }
+
+  @media (max-width: 560px) {
+    .pwa-prompt {
+      flex-wrap: wrap;
+    }
+
+    .pwa-prompt__actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .pwa-prompt__actions .btn {
+      flex: 1;
+    }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "jotech:pwa-prompt-dismissed";
+  const DISMISS_DAYS = 30;
+
+  const panel = document.getElementById("pwa-prompt");
+  const installBtn = document.getElementById("pwa-install") as HTMLButtonElement | null;
+  const dismissBtn = document.getElementById("pwa-dismiss");
+  const text = document.getElementById("pwa-prompt-text");
+
+  let deferredPrompt: any = null;
+
+  const isStandalone = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    // iOS Safari
+    (window.navigator as any).standalone === true;
+
+  function recentlyDismissed() {
+    try {
+      const ts = Number(localStorage.getItem(STORAGE_KEY) ?? 0);
+      return Date.now() - ts < DISMISS_DAYS * 864e5;
+    } catch {
+      return false;
+    }
+  }
+
+  function show() {
+    if (!panel || isStandalone() || recentlyDismissed()) return;
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add("is-visible"));
+  }
+
+  function hide(remember = true) {
+    if (!panel) return;
+    panel.classList.remove("is-visible");
+    setTimeout(() => (panel.hidden = true), 400);
+    if (remember) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(Date.now()));
+      } catch {
+        /* modo privado: ignorar */
+      }
+    }
+  }
+
+  // ── Chrome / Edge / Android ───────────────────────────────────
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Espera um pouco: não interromper logo à chegada.
+    setTimeout(show, 6000);
+  });
+
+  installBtn?.addEventListener("click", async () => {
+    if (!deferredPrompt) return hide(false);
+    hide(false);
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  });
+
+  dismissBtn?.addEventListener("click", () => hide(true));
+
+  window.addEventListener("appinstalled", () => hide(false));
+
+  // ── iOS / iPadOS: sem beforeinstallprompt, damos instruções ────
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (ua.includes("Mac") && "ontouchend" in document);
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|Chrome/.test(ua);
+
+  if (isIOS && isSafari && !isStandalone()) {
+    if (text) text.textContent = "Toque em Partilhar ↑ e depois em “Adicionar ao ecrã principal”.";
+    installBtn?.remove();
+    setTimeout(show, 8000);
+  }
+
+  // ── Registo do service worker ─────────────────────────────────
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+
+        // Nova versão disponível → ativa assim que possível.
+        reg.addEventListener("updatefound", () => {
+          const sw = reg.installing;
+          sw?.addEventListener("statechange", () => {
+            if (sw.state === "installed" && navigator.serviceWorker.controller) {
+              sw.postMessage("SKIP_WAITING");
+            }
+          });
+        });
+      } catch (error) {
+        console.warn("[pwa] Falha ao registar o service worker:", error);
+      }
+    });
+  }
+</script>
