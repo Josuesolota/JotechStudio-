@@ -128,15 +128,18 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     // Nota: este é o site de apresentação/conversão da Kairos
     // (landing-page-kairos-bay.vercel.app) — distinto da própria plataforma
     // (app, em kairos-lemon-rho.vercel.app), que é gerida separadamente no
-    // Sanity. Não reaproveitar o ícone/capa da Kairos aqui, para os dois
-    // projetos não parecerem visualmente duplicados; sem capa, o cartão usa
-    // o fallback com as iniciais.
+    // Sanity. Capa recortada de um screenshot real da própria landing page
+    // (secção do headline "Negoceia na Deriv com Trading Algorítmico"),
+    // fornecido pelo utilizador — não reaproveita o ícone/capa da Kairos, para
+    // os dois projetos não parecerem visualmente duplicados.
     title: "Kairos — Landing Page",
     slug: "kairos-landing-page",
     summary:
       "Página de apresentação e conversão da Kairos, plataforma de trading algorítmico na Deriv — o primeiro contacto de quem ainda não é utilizador, antes de entrar na app.",
     category: ["landing-page", "fintech-trading"],
     techStack: ["TypeScript", "React", "Deriv API"],
+    coverUrl: "/projects/kairos-landing-page-cover.jpg",
+    coverAlt: "Secção da landing page da Kairos: 'Negoceia na Deriv com Trading Algorítmico'",
     demoUrl: "https://landing-page-kairos-bay.vercel.app/",
     kind: "case",
     featured: false,
