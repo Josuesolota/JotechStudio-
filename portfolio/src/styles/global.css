@@ -1,77 +1,139 @@
 /*
-  DIREÇÃO DE DESIGN
-  Sujeito: desenvolvedor + trader algorítmico (fintech, Deriv API, forex/opções).
-  Conceito: painel de terminal — o mesmo objeto visual que une as duas
-  identidades do usuário (terminal de código / terminal de trading).
-  Paleta: "ink" quase-preto (não puro preto), âmbar como assinatura
-  (referência a terminais Bloomberg/trading, não o verde-ácido genérico),
-  verde/vermelho reservados SÓ para sinais de status (like/dislike, ao vivo).
+  ─────────────────────────────────────────────────────────────
+  JOTECH STUDIO — DESIGN SYSTEM
+  ─────────────────────────────────────────────────────────────
+  Direção: a marca já tem uma identidade forte (engrenagem de
+  circuito + wordmark azul → verde sobre navy profundo). Todo o
+  site passa a derivar dessa identidade:
+
+    · Fundo  → navy quase-preto do banner (#04070F → #0C1424)
+    · Accent → gradiente azul → ciano → verde do wordmark
+    · Textura→ malha de circuito subtil (grid), nunca ruído
+
+  Regras:
+    · Verde/vermelho puros ficam reservados a SINAIS de estado.
+    · Gradiente de marca só em elementos de destaque (nunca em
+      blocos grandes de texto — legibilidade primeiro).
+    · Tudo funciona sem JavaScript; animações respeitam
+      prefers-reduced-motion.
 */
 
 :root {
-  /* Cor */
-  --ink-900: #0b0e11; /* fundo principal */
-  --ink-800: #12161b; /* superfícies/cards */
-  --ink-700: #1c2128; /* bordas, divisores */
-  --paper: #e8e6e1; /* texto principal, branco quente */
-  --paper-dim: #9aa0a6; /* texto secundário */
-  --amber: #ffb020; /* assinatura — accent principal */
-  --amber-dim: #8a5c14;
-  --signal-up: #3ecf8e; /* uso pontual: disponível/positivo */
-  --signal-down: #ff5c5c; /* uso pontual: alerta/erro */
+  /* ── Superfícies ─────────────────────────────────────────── */
+  --ink-950: #04070f; /* fundo base */
+  --ink-900: #070c18; /* fundo alternado de secção */
+  --ink-800: #0c1424; /* cards / superfícies */
+  --ink-700: #111d31; /* superfícies elevadas */
+  --line: #1a2740; /* bordas e divisores */
+  --line-strong: #26375a;
 
-  /* Tipografia */
+  /* ── Texto ───────────────────────────────────────────────── */
+  --paper: #e9eef6;
+  --paper-dim: #94a3b8;
+  --paper-faint: #7d8ba1; /* AA: 5.8:1 sobre o fundo, 5.3:1 sobre cards */
+
+  /* ── Marca ───────────────────────────────────────────────── */
+  --brand-blue: #2f6fe0;
+  --brand-blue-soft: #4f8bf5;
+  --brand-cyan: #22a7c9;
+  --brand-green: #86c440;
+  --brand: var(--brand-blue-soft); /* accent sólido de leitura */
+  --brand-gradient: linear-gradient(100deg, #2f6fe0 0%, #22a7c9 52%, #86c440 100%);
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(47, 111, 224, 0.18) 0%,
+    rgba(34, 167, 201, 0.12) 50%,
+    rgba(134, 196, 64, 0.14) 100%
+  );
+
+  /* ── Sinais ──────────────────────────────────────────────── */
+  --signal-up: #3ecf8e;
+  --signal-down: #ff5c5c;
+  --signal-warn: #ffb020;
+
+  /* ── Tipografia ──────────────────────────────────────────── */
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Espaçamento (escala 4/8) */
+  /* ── Espaçamento (escala 4/8) ────────────────────────────── */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
+  --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
   --space-24: 6rem;
 
-  --radius: 6px;
-  --max-width: 72rem;
+  /* ── Forma & profundidade ────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 0 1px rgba(79, 139, 245, 0.25), 0 18px 48px -20px rgba(47, 111, 224, 0.55);
+
+  --header-h: 68px;
+  --max-width: 74rem;
 
   color-scheme: dark;
 }
 
-* {
+/* ─────────────────────────────────────────────────────────────
+   Reset / base
+   ───────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  scroll-padding-top: calc(var(--header-h) + var(--space-6));
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--ink-900);
+  background-color: var(--ink-950);
+  /* Malha de circuito: duas grelhas finas + brilho de marca no topo */
+  background-image:
+    radial-gradient(70rem 40rem at 50% -12rem, rgba(47, 111, 224, 0.16), transparent 65%),
+    radial-gradient(50rem 34rem at 100% 0%, rgba(134, 196, 64, 0.07), transparent 60%),
+    linear-gradient(rgba(26, 39, 64, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 39, 64, 0.35) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+  background-attachment: scroll, scroll, fixed, fixed;
   color: var(--paper);
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
+  min-height: 100dvh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+img,
+picture,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Tipografia
+   ───────────────────────────────────────────────────────────── */
 
 h1,
 h2,
@@ -79,38 +141,72 @@ h3,
 h4 {
   font-family: var(--font-display);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.12;
   margin: 0 0 var(--space-4);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 4vw + 1rem, 3.75rem);
+  font-size: clamp(2.25rem, 4.2vw + 1rem, 3.9rem);
 }
 
 h2 {
-  font-size: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);
+  font-size: clamp(1.75rem, 2.4vw + 1rem, 2.6rem);
 }
 
 h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
 p {
   margin: 0 0 var(--space-4);
   color: var(--paper-dim);
-  max-width: 60ch;
+  max-width: 62ch;
+  text-wrap: pretty;
 }
 
 a {
-  color: var(--amber);
+  color: var(--brand-blue-soft);
+  text-underline-offset: 3px;
+}
+
+strong {
+  color: var(--paper);
+  font-weight: 600;
 }
 
 .mono {
   font-family: var(--font-mono);
 }
 
-/* Layout */
+.lead {
+  font-size: clamp(1.02rem, 0.5vw + 0.95rem, 1.2rem);
+  color: var(--paper-dim);
+  max-width: 58ch;
+}
+
+/* Texto com o gradiente da marca (usar com moderação) */
+.grad-text {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* fallback caso background-clip falhe */
+  -webkit-text-fill-color: transparent;
+}
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .grad-text {
+    color: var(--brand-blue-soft);
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Layout
+   ───────────────────────────────────────────────────────────── */
+
 .container {
   width: 100%;
   max-width: var(--max-width);
@@ -119,27 +215,58 @@ a {
 }
 
 .section {
-  padding-block: var(--space-24);
+  padding-block: clamp(var(--space-16), 8vw, var(--space-24));
+  position: relative;
 }
 
 .section--tight {
-  padding-block: var(--space-16);
+  padding-block: clamp(var(--space-12), 6vw, var(--space-20));
 }
 
-/* Foco visível — obrigatório para acessibilidade de teclado */
+.section--alt {
+  background: linear-gradient(180deg, transparent, rgba(12, 20, 36, 0.75) 12%, rgba(12, 20, 36, 0.75) 88%, transparent);
+  border-block: 1px solid var(--line);
+}
+
+.stack > * + * {
+  margin-top: var(--space-4);
+}
+
+.grid-auto {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+/* Cabeçalho de secção reutilizável */
+.section-head {
+  max-width: 42rem;
+  margin-bottom: var(--space-10);
+}
+
+.section-head p {
+  margin-bottom: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Acessibilidade
+   ───────────────────────────────────────────────────────────── */
+
 :focus-visible {
-  outline: 2px solid var(--amber);
+  outline: 2px solid var(--brand-blue-soft);
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--amber);
-  color: var(--ink-900);
+  background: var(--brand-blue);
+  color: #fff;
   padding: var(--space-2) var(--space-4);
-  z-index: 100;
+  z-index: 200;
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.875rem;
 }
@@ -149,73 +276,213 @@ a {
   top: var(--space-4);
 }
 
-/* Botões */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--ink-700);
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.btn:hover {
-  border-color: var(--amber);
-  transform: translateY(-1px);
-}
-
-.btn--primary {
-  background: var(--amber);
-  color: var(--ink-900);
-  border-color: var(--amber);
-  font-weight: 600;
-}
-
-.btn--primary:hover {
-  background: #ffc659;
-  border-color: #ffc659;
-}
-
-/* Tag estilo "ticker" — usada para tech stack */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--ink-700);
-  border-radius: 4px;
-  color: var(--paper-dim);
-  background: var(--ink-800);
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--amber);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: var(--space-2);
-  display: block;
-}
-
-.card {
-  background: var(--ink-800);
-  border: 1px solid var(--ink-700);
-  border-radius: var(--radius);
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
+  clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Botões
+   ───────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.85rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  background: rgba(12, 20, 36, 0.6);
+  color: var(--paper);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn:hover {
+  border-color: var(--brand-blue-soft);
+  background: rgba(47, 111, 224, 0.12);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--primary {
+  position: relative;
+  /* gradiente próprio, ligeiramente mais claro que o da marca: garante
+     4.5:1 do texto quase-preto em toda a extensão do botão */
+  background: linear-gradient(100deg, #3b78e8 0%, #22a7c9 52%, #86c440 100%);
+  background-size: 160% 100%;
+  color: #04070f;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 10px 30px -12px rgba(47, 111, 224, 0.8);
+}
+
+.btn--primary:hover {
+  background-position: 100% 0;
+  box-shadow: 0 14px 36px -12px rgba(47, 111, 224, 0.95);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line);
+}
+
+.btn--sm {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Cartões e etiquetas
+   ───────────────────────────────────────────────────────────── */
+
+.card {
+  background: linear-gradient(180deg, rgba(17, 29, 49, 0.85), rgba(12, 20, 36, 0.85));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Cartão com moldura de gradiente no hover */
+.card--interactive {
+  position: relative;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.card--interactive:hover {
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  color: var(--paper-dim);
+  background: rgba(4, 7, 15, 0.6);
+  white-space: nowrap;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--brand-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--brand-gradient);
+}
+
+/* Selo de disponibilidade */
+.badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--paper-dim);
+  border: 1px solid var(--line);
+  background: rgba(12, 20, 36, 0.7);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-pill);
+}
+
+.badge-live__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal-up);
+  box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.7);
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 8px rgba(62, 207, 142, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(62, 207, 142, 0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Animação de entrada (progressive enhancement)
+   ───────────────────────────────────────────────────────────── */
+
+[data-reveal] {
+  opacity: 1;
+}
+
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  html.js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Garante que [hidden] vence display:flex/grid nos componentes */
+[hidden] {
+  display: none !important;
 }

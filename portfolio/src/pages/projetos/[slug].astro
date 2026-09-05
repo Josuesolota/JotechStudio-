@@ -1,89 +1,153 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CTASection from "../../components/CTASection.astro";
-import { sanityClient, urlFor } from "../../lib/sanity";
-import { ALL_SLUGS_QUERY, PROJECT_BY_SLUG_QUERY } from "../../lib/queries";
+import Icon from "../../components/Icon.astro";
 import { renderCaseStudy } from "../../lib/portableText";
-import type { Project } from "../../types/project";
+import {
+  CATEGORY_LABELS,
+  getAllProjectSlugs,
+  getProjectBySlug,
+  type ProjectView,
+} from "../../lib/projects";
 
 export async function getStaticPaths() {
-  try {
-    const slugs = await sanityClient.fetch<{ slug: string }[]>(ALL_SLUGS_QUERY);
-    return slugs.map(({ slug }) => ({ params: { slug } }));
-  } catch (error) {
-    console.warn("[sanity] Não foi possível gerar rotas de projetos:", error);
-    return [];
-  }
+  const slugs = await getAllProjectSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
 }
 
 const { slug } = Astro.params;
-const project = await sanityClient.fetch<Project | null>(PROJECT_BY_SLUG_QUERY, { slug });
+const project: ProjectView | null = await getProjectBySlug(slug!, (blocks) =>
+  renderCaseStudy(blocks as never)
+);
 
-if (!project) {
-  return Astro.redirect("/projetos");
-}
-
-const caseStudyHTML = renderCaseStudy(project.caseStudy);
-
-const categoryLabels: Record<string, string> = {
-  "web-app": "Web App",
-  "fintech-trading": "Fintech / Trading",
-  automacao: "Automação",
-  "landing-page": "Landing Page",
-  outro: "Outro",
-};
+if (!project) return Astro.redirect("/projetos");
 ---
 
-<BaseLayout title={project.title} description={project.summary}>
+<BaseLayout
+  title={project.title}
+  description={project.summary}
+  image={project.coverUrl ?? "/og-image.jpg"}
+>
   <article class="section">
-    <div class="container project-detail">
-      <a href="/projetos" class="back-link mono">← Todos os projetos</a>
+    <div class="container">
+      <a href="/projetos" class="back-link mono">
+        <Icon name="arrow" size={14} class="back-link__icon" />
+        Todos os projetos
+      </a>
 
-      <div class="project-detail__categories">
-        {project.category?.map((c) => <span class="eyebrow">{categoryLabels[c] ?? c}</span>)}
-      </div>
+      <header class="project-head" data-reveal>
+        <div class="project-head__cats">
+          {project.category?.map((c) => <span class="eyebrow">{CATEGORY_LABELS[c] ?? c}</span>)}
+          {project.kind === "concept" && <span class="tag">Conceito</span>}
+        </div>
 
-      <h1>{project.title}</h1>
-      <p class="project-detail__summary">{project.summary}</p>
+        <h1>{project.title}</h1>
+        <p class="lead">{project.summary}</p>
 
-      <div class="project-detail__stack">
-        {project.techStack?.map((tech) => <span class="tag">{tech}</span>)}
-      </div>
+        <div class="project-head__meta">
+          {project.client && (
+            <div>
+              <span class="mono meta-label">Cliente</span>
+              <span>{project.client}</span>
+            </div>
+          )}
+          {project.publishedAt && (
+            <div>
+              <span class="mono meta-label">Data</span>
+              <span>
+                {new Date(project.publishedAt).toLocaleDateString("pt-PT", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+          )}
+          <div>
+            <span class="mono meta-label">Stack</span>
+            <span>{project.techStack?.slice(0, 3).join(" · ")}</span>
+          </div>
+        </div>
 
-      <div class="project-detail__links">
-        {project.demoUrl && (
-          <a href={project.demoUrl} class="btn btn--primary" target="_blank" rel="noreferrer">
-            Ver demo →
-          </a>
-        )}
-        {project.repoUrl && (
-          <a href={project.repoUrl} class="btn" target="_blank" rel="noreferrer">
-            Repositório
-          </a>
-        )}
-      </div>
+        <div class="project-head__actions">
+          {
+            project.demoUrl && (
+              <a href={project.demoUrl} class="btn btn--primary" target="_blank" rel="noreferrer">
+                Ver ao vivo
+                <Icon name="arrow" size={16} />
+              </a>
+            )
+          }
+          {
+            project.repoUrl && (
+              <a href={project.repoUrl} class="btn" target="_blank" rel="noreferrer">
+                <Icon name="github" size={16} />
+                Código
+              </a>
+            )
+          }
+        </div>
+      </header>
 
       {
-        project.coverImage && (
+        project.coverUrl && (
           <img
-            src={urlFor(project.coverImage).width(1200).url()}
-            alt={project.coverImage.alt ?? project.title}
-            class="project-detail__cover"
+            src={project.coverUrl}
+            alt={project.coverAlt ?? project.title}
+            class="project-cover"
+            width="1200"
+            height="750"
+            data-reveal
           />
         )
       }
 
-      {
-        caseStudyHTML && (
-          <div class="project-detail__body" set:html={caseStudyHTML} />
-        )
-      }
+      <div class="project-body">
+        <div class="project-body__main">
+          {project.bodyHtml && <div class="prose" set:html={project.bodyHtml} />}
+
+          {
+            project.bodyBlocks?.map((block) => (
+              <section class="prose" data-reveal>
+                {block.heading && <h2>{block.heading}</h2>}
+                {block.paragraphs.map((p) => (
+                  <p>{p}</p>
+                ))}
+              </section>
+            ))
+          }
+        </div>
+
+        <aside class="project-body__aside">
+          <div class="card aside-card" data-reveal>
+            <h2 class="aside-card__title mono">Tecnologias</h2>
+            <div class="aside-card__tags">
+              {project.techStack?.map((t) => <span class="tag">{t}</span>)}
+            </div>
+          </div>
+
+          {
+            project.results && project.results.length > 0 && (
+              <div class="card aside-card" data-reveal>
+                <h2 class="aside-card__title mono">Destaques</h2>
+                <ul class="aside-card__list">
+                  {project.results.map((r) => (
+                    <li>
+                      <Icon name="check" size={15} />
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </aside>
+      </div>
 
       {
         project.gallery && project.gallery.length > 0 && (
-          <div class="project-detail__gallery">
+          <div class="gallery" data-reveal>
             {project.gallery.map((img) => (
-              <img src={urlFor(img).width(800).url()} alt={img.alt ?? ""} loading="lazy" />
+              <img src={img.url} alt={img.alt} loading="lazy" decoding="async" />
             ))}
           </div>
         )
@@ -93,87 +157,199 @@ const categoryLabels: Record<string, string> = {
 
   <CTASection
     title="Gostou do que viu?"
-    description="Posso construir algo parecido — ou completamente diferente — para o seu projeto."
+    description="Posso construir algo parecido — ou completamente diferente — para o seu negócio."
   />
 </BaseLayout>
 
 <style>
-  .project-detail {
-    max-width: 48rem;
-  }
-
   .back-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     color: var(--paper-dim);
     text-decoration: none;
-    font-size: 0.85rem;
-    margin-bottom: var(--space-6);
+    font-size: 0.84rem;
+    margin-bottom: var(--space-8);
+  }
+
+  .back-link :global(.back-link__icon) {
+    transform: rotate(180deg);
+    transition: transform 0.2s ease;
   }
 
   .back-link:hover {
-    color: var(--amber);
+    color: var(--paper);
   }
 
-  .project-detail__categories {
+  .project-head {
+    max-width: 46rem;
+  }
+
+  .project-head__cats {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .project-head__cats .eyebrow {
+    margin-bottom: 0;
+  }
+
+  .project-head__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin: var(--space-8) 0;
+    padding-block: var(--space-5);
+    border-block: 1px solid var(--line);
+  }
+
+  .project-head__meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.9rem;
+  }
+
+  .meta-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+  }
+
+  .project-head__actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+  }
+
+  .project-cover {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-bottom: var(--space-12);
+    object-fit: cover;
+  }
+
+  .project-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: var(--space-10);
+  }
+
+  .prose:first-child h2 {
+    margin-top: 0;
+  }
+
+  .prose :global(p),
+  .prose p {
+    color: var(--paper-dim);
+    max-width: 65ch;
+  }
+
+  .prose :global(img) {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-block: var(--space-6);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    color: var(--paper-dim);
+    padding-left: 1.25rem;
+  }
+
+  .prose :global(li) {
     margin-bottom: var(--space-2);
   }
 
-  .project-detail__summary {
-    font-size: 1.1rem;
+  .prose :global(blockquote) {
+    margin: var(--space-6) 0;
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--brand-blue);
+    color: var(--paper);
+    font-style: italic;
   }
 
-  .project-detail__stack {
+  .aside-card {
+    padding: var(--space-6);
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+  }
+
+  .aside-card + .aside-card {
+    margin-top: var(--space-4);
+    position: static;
+  }
+
+  .aside-card__title {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    font-weight: 400;
+    margin-bottom: var(--space-4);
+  }
+
+  .aside-card__tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-    margin-bottom: var(--space-6);
   }
 
-  .project-detail__links {
-    display: flex;
-    gap: var(--space-4);
-    margin-bottom: var(--space-8);
-  }
-
-  .project-detail__cover {
-    width: 100%;
-    border-radius: var(--radius);
-    border: 1px solid var(--ink-700);
-    margin-bottom: var(--space-8);
-  }
-
-  .project-detail__body {
-    color: var(--paper);
-  }
-
-  .project-detail__body :global(p) {
-    color: var(--paper);
-    max-width: none;
-  }
-
-  .project-detail__body :global(h2),
-  .project-detail__body :global(h3) {
-    margin-top: var(--space-8);
-  }
-
-  .project-detail__body :global(img) {
-    width: 100%;
-    border-radius: var(--radius);
-    margin-block: var(--space-4);
-  }
-
-  .project-detail__gallery {
+  .aside-card__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: var(--space-4);
-    margin-top: var(--space-8);
+    gap: var(--space-3);
   }
 
-  .project-detail__gallery img {
+  .aside-card__list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: var(--paper-dim);
+  }
+
+  .aside-card__list :global(svg) {
+    color: var(--brand-green);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-12);
+  }
+
+  .gallery img {
     width: 100%;
     border-radius: var(--radius);
-    border: 1px solid var(--ink-700);
+    border: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .project-body {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .aside-card {
+      position: static;
+    }
   }
 </style>

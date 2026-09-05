@@ -1,6 +1,5 @@
 import { createClient } from "@sanity/client";
-import imageUrlBuilder from "@sanity/image-url";
-import type { Image } from "@sanity/types";
+import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 
 /**
  * Cliente Sanity — usado em build-time pelas páginas Astro (SSG).
@@ -24,10 +23,10 @@ export const sanityClient = createClient({
   useCdn: true, // true = respostas mais rápidas e em cache (ideal para build)
 });
 
-const builder = imageUrlBuilder(sanityClient);
+const builder = createImageUrlBuilder(sanityClient);
 
 /** Helper para gerar URLs otimizadas de imagens do Sanity */
-export function urlFor(source: Image) {
+export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 

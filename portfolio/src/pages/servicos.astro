@@ -1,119 +1,198 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CTASection from "../components/CTASection.astro";
-
-const services = [
-  {
-    title: "Desenvolvimento Web Full-Stack",
-    description:
-      "Sites institucionais, dashboards, aplicações web e landing pages de alta conversão. Python, TypeScript, React e Astro.",
-  },
-  {
-    title: "Sistemas de Trading Algorítmico",
-    description:
-      "Bots e estratégias automatizadas, integração com a API da Deriv, backtesting e monitoramento de performance.",
-  },
-  {
-    title: "Automação de Processos",
-    description:
-      "Scripts e integrações que eliminam trabalho manual repetitivo — de scraping de dados a pipelines de notificação.",
-  },
-  {
-    title: "Consultoria Técnica",
-    description:
-      "Revisão de arquitetura, auditoria de código e orientação técnica para times ou fundadores não-técnicos.",
-  },
-];
+import ProcessSteps from "../components/ProcessSteps.astro";
+import FaqList from "../components/FaqList.astro";
+import Icon from "../components/Icon.astro";
+import { SERVICES } from "../data/services";
 ---
 
 <BaseLayout
   title="Serviços"
-  description="Desenvolvimento web, automação e sistemas de trading algorítmico sob medida para fintechs e negócios digitais."
+  description="Landing pages, sites institucionais, e-commerce, web apps, trading algorítmico e automação. Escopo, prazo e valor fechados antes de começar."
 >
   <section class="section">
     <div class="container">
-      <span class="eyebrow">O que eu faço</span>
-      <h1>Serviços</h1>
-      <p>Da concepção ao deploy — construção sob medida, sem pacotes engessados.</p>
+      <header class="page-head" data-reveal>
+        <span class="eyebrow">O que eu faço</span>
+        <h1>Serviços digitais, do conceito ao deploy</h1>
+        <p class="lead">
+          Sem pacotes engessados: cada projeto começa por perceber o objetivo do negócio.
+          Depois escolhemos a tecnologia — nunca ao contrário.
+        </p>
+      </header>
 
-      <div class="services-grid">
+      <div class="services">
         {
-          services.map((service) => (
-            <div class="card service-card">
-              <h3>{service.title}</h3>
+          SERVICES.map((service, i) => (
+            <article
+              class="service card"
+              id={service.slug}
+              data-reveal
+              style={`--reveal-delay:${(i % 2) * 80}ms`}
+            >
+              <div class="service__head">
+                <span class="service__icon">
+                  <Icon name={service.icon} size={22} />
+                </span>
+                <div>
+                  <h2>{service.title}</h2>
+                  <p class="service__pitch">{service.pitch}</p>
+                </div>
+              </div>
+
               <p>{service.description}</p>
-            </div>
+
+              <h3 class="service__subtitle mono">O que está incluído</h3>
+              <ul class="service__list">
+                {service.deliverables.map((d) => (
+                  <li>
+                    <Icon name="check" size={15} />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <footer class="service__footer">
+                <span class="tag">Prazo típico: {service.timeline}</span>
+                <a href="/contato" class="btn btn--sm">
+                  Pedir orçamento
+                  <Icon name="arrow" size={15} />
+                </a>
+              </footer>
+            </article>
           ))
         }
-      </div>
-
-      <div class="process card">
-        <h2>Como funciona</h2>
-        <ol class="process__list mono">
-          <li><strong>Briefing</strong> — entendemos o problema e o objetivo real do projeto.</li>
-          <li><strong>Proposta</strong> — escopo, prazo e valor claros, sem letras miúdas.</li>
-          <li><strong>Desenvolvimento</strong> — entregas incrementais, com você acompanhando o progresso.</li>
-          <li><strong>Deploy & suporte</strong> — publicação e acompanhamento pós-entrega.</li>
-        </ol>
       </div>
     </div>
   </section>
 
-  <CTASection title="Pronto para começar?" description="Me conta o que você precisa e eu retorno com uma proposta." />
+  <section class="section--tight section--alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Processo</span>
+        <h2>Como funciona</h2>
+        <p class="lead">
+          Sem surpresas: sabe sempre o que vem a seguir, quanto custa e quando fica pronto.
+        </p>
+      </div>
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container faq-wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Dúvidas</span>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <FaqList />
+    </div>
+  </section>
+
+  <CTASection
+    title="Pronto para começar?"
+    description="Descreva o que precisa e recebe uma proposta com escopo, prazo e valor — sem compromisso."
+  />
 </BaseLayout>
 
 <style>
-  .services-grid {
+  .page-head {
+    max-width: 46rem;
+    margin-bottom: var(--space-16);
+  }
+
+  .services {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
     gap: var(--space-6);
-    margin-block: var(--space-8);
   }
 
-  .service-card {
-    padding: var(--space-6);
-  }
-
-  .service-card h3 {
-    margin-bottom: var(--space-2);
-  }
-
-  .service-card p {
-    font-size: 0.9rem;
-    margin: 0;
-  }
-
-  .process {
+  .service {
+    display: flex;
+    flex-direction: column;
     padding: var(--space-8);
-    margin-top: var(--space-12);
+    scroll-margin-top: calc(var(--header-h) + var(--space-8));
   }
 
-  .process__list {
+  .service__head {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    margin-bottom: var(--space-5);
+  }
+
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    color: var(--brand-blue-soft);
+    background: rgba(47, 111, 224, 0.12);
+    border: 1px solid rgba(79, 139, 245, 0.25);
+  }
+
+  .service h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .service__pitch {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--brand-green);
+  }
+
+  .service > p {
+    font-size: 0.94rem;
+  }
+
+  .service__subtitle {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper-faint);
+    margin: var(--space-5) 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+
+  .service__list {
     list-style: none;
     padding: 0;
+    margin: 0 0 var(--space-6);
     display: grid;
-    gap: var(--space-4);
-    counter-reset: step;
+    gap: var(--space-2);
+    flex: 1;
   }
 
-  .process__list li {
-    padding-left: 2.5rem;
-    position: relative;
-    color: var(--paper-dim);
+  .service__list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
     font-size: 0.9rem;
+    color: var(--paper-dim);
   }
 
-  .process__list li::before {
-    counter-increment: step;
-    content: counter(step, decimal-leading-zero);
-    position: absolute;
-    left: 0;
-    color: var(--amber);
-    font-weight: 600;
+  .service__list :global(svg) {
+    color: var(--brand-green);
+    flex-shrink: 0;
+    margin-top: 3px;
   }
 
-  .process__list strong {
-    color: var(--paper);
-    font-family: var(--font-body);
+  .service__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .faq-wrap {
+    max-width: 52rem;
   }
 </style>

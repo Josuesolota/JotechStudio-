@@ -1,44 +1,86 @@
 ---
+import Icon from "./Icon.astro";
+import { CONTACT } from "../data/site";
+
 interface Props {
   title?: string;
   description?: string;
 }
 const {
   title = "Tem um projeto em mente?",
-  description = "Vamos conversar sobre como transformar sua ideia em um produto funcional.",
+  description = "Conte-me o que precisa e recebe uma proposta com escopo, prazo e valor — sem custo e sem compromisso.",
 } = Astro.props;
 ---
 
-<section class="cta section--tight">
-  <div class="container cta__inner">
-    <div>
-      <h2>{title}</h2>
-      <p>{description}</p>
+<section class="cta">
+  <div class="container">
+    <div class="cta__panel" data-reveal>
+      <div class="cta__glow" aria-hidden="true"></div>
+      <div class="cta__copy">
+        <span class="eyebrow">Próximo passo</span>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+      <div class="cta__actions">
+        <a href="/contato" class="btn btn--primary">
+          Pedir orçamento
+          <Icon name="arrow" size={17} />
+        </a>
+        <a href={CONTACT.whatsapp} class="btn" target="_blank" rel="noreferrer">
+          <Icon name="whatsapp" size={17} />
+          WhatsApp
+        </a>
+      </div>
     </div>
-    <a href="/contato" class="btn btn--primary">Falar comigo →</a>
   </div>
 </section>
 
 <style>
   .cta {
-    border-top: 1px solid var(--ink-700);
-    border-bottom: 1px solid var(--ink-700);
-    background: var(--ink-800);
+    padding-block: var(--space-16);
   }
 
-  .cta__inner {
+  .cta__panel {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-6);
+    gap: var(--space-8);
+    padding: clamp(var(--space-8), 5vw, var(--space-16));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background:
+      var(--brand-gradient-soft),
+      linear-gradient(180deg, rgba(17, 29, 49, 0.9), rgba(4, 7, 15, 0.9));
   }
 
-  .cta h2 {
-    margin-bottom: var(--space-2);
+  .cta__glow {
+    position: absolute;
+    inset: -40% -10% auto;
+    height: 260px;
+    background: radial-gradient(50% 100% at 50% 0%, rgba(47, 111, 224, 0.35), transparent 70%);
+    pointer-events: none;
   }
 
-  .cta p {
+  .cta__copy {
+    position: relative;
+    max-width: 40rem;
+  }
+
+  .cta__copy h2 {
+    margin-bottom: var(--space-3);
+  }
+
+  .cta__copy p {
     margin: 0;
+  }
+
+  .cta__actions {
+    position: relative;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
   }
 </style>

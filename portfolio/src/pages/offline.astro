@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { CONTACT } from "../data/site";
+
+/**
+ * Página servida pelo service worker quando não há ligação e a
+ * página pedida ainda não está em cache. Deve ser leve e útil.
+ */
+---
+
+<BaseLayout
+  title="Sem ligação"
+  description="Não foi possível ligar à internet. As páginas já visitadas continuam disponíveis."
+  noindex
+>
+  <section class="section offline">
+    <div class="container">
+      <img src="/icons/icon-192.png" alt="" width="88" height="88" class="offline__icon" />
+      <span class="eyebrow">Modo offline</span>
+      <h1>Sem ligação à internet</h1>
+      <p class="lead">
+        A app do Jotech Studio continua a funcionar — mas esta página ainda não estava
+        guardada no seu dispositivo. Verifique a ligação e tente de novo.
+      </p>
+
+      <div class="offline__actions">
+        <button type="button" class="btn btn--primary" id="retry">
+          Tentar novamente
+          <Icon name="arrow" size={16} />
+        </button>
+        <a href="/" class="btn">Ir para o início</a>
+      </div>
+
+      <p class="offline__note mono">
+        Ainda pode contactar-me por email:
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .offline {
+    text-align: center;
+    padding-block: clamp(var(--space-16), 12vh, var(--space-24));
+  }
+
+  .offline__icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    margin: 0 auto var(--space-6);
+    opacity: 0.85;
+  }
+
+  .offline .eyebrow {
+    justify-content: center;
+  }
+
+  .offline p {
+    margin-inline: auto;
+  }
+
+  .offline__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-8);
+  }
+
+  .offline__note {
+    margin-top: var(--space-10);
+    font-size: 0.8rem;
+    color: var(--paper-faint);
+  }
+</style>
+
+<script>
+  document.getElementById("retry")?.addEventListener("click", () => {
+    window.location.reload();
+  });
+
+  // Recarrega automaticamente assim que a ligação voltar.
+  window.addEventListener("online", () => window.location.reload());
+</script>
