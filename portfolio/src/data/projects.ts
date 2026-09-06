@@ -50,8 +50,8 @@ export const LOCAL_PROJECTS: LocalProject[] = [
       "Este próprio site: portfólio instalável como aplicação (PWA), estático, com CMS headless e pontuação máxima de performance.",
     category: ["web-app", "landing-page"],
     techStack: ["Astro", "TypeScript", "Sanity CMS", "PWA", "Vercel"],
-    coverUrl: "/brand/banner.jpg",
-    coverAlt: "Banner da marca Jotech Studio",
+    coverUrl: "/projects/jotech-studio-cover.jpg",
+    coverAlt: "Ícone da marca Jotech Studio — engrenagem com circuito azul",
     demoUrl: "https://jotechstudio.vercel.app",
     repoUrl: "https://github.com/Josuesolota/JotechStudio-",
     kind: "case",
@@ -128,18 +128,17 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     // Nota: este é o site de apresentação/conversão da Kairos
     // (landing-page-kairos-bay.vercel.app) — distinto da própria plataforma
     // (app, em kairos-lemon-rho.vercel.app), que é gerida separadamente no
-    // Sanity. Capa recortada de um screenshot real da própria landing page
-    // (secção do headline "Negoceia na Deriv com Trading Algorítmico"),
-    // fornecido pelo utilizador — não reaproveita o ícone/capa da Kairos, para
-    // os dois projetos não parecerem visualmente duplicados.
+    // Sanity. Capa com o ícone da marca Kairos (relógio + seta ascendente),
+    // igual ao usado na capa da Kairos Trading Platform no Sanity — a pedido
+    // do utilizador, já que landing page e app partilham a mesma identidade.
     title: "Kairos — Landing Page",
     slug: "kairos-landing-page",
     summary:
       "Página de apresentação e conversão da Kairos, plataforma de trading algorítmico na Deriv — o primeiro contacto de quem ainda não é utilizador, antes de entrar na app.",
     category: ["landing-page", "fintech-trading"],
     techStack: ["TypeScript", "React", "Deriv API"],
-    coverUrl: "/projects/kairos-landing-page-cover.jpg",
-    coverAlt: "Secção da landing page da Kairos: 'Negoceia na Deriv com Trading Algorítmico'",
+    coverUrl: "/projects/kairos-landing-page-cover-v2.jpg",
+    coverAlt: "Ícone da marca Kairos — relógio com seta de tendência ascendente",
     demoUrl: "https://landing-page-kairos-bay.vercel.app/",
     kind: "case",
     featured: false,
