@@ -2,12 +2,33 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import FaqList from "../components/FaqList.astro";
+import CustomSelect from "../components/CustomSelect.astro";
 import { CONTACT, SITE } from "../data/site";
 import { SERVICES } from "../data/services";
 
 // Chave pública do Web3Forms (é pública por design — identifica o
 // destinatário do formulário, não dá acesso a nada).
 const WEB3FORMS_ACCESS_KEY = "4f3ac30b-9f13-4b79-90bd-2736c2396e99";
+
+const SERVICE_OPTIONS = [
+  { value: "", label: "Ainda não sei / outro" },
+  ...SERVICES.map((s) => ({ value: s.slug, label: s.title })),
+];
+
+const BUDGET_OPTIONS = [
+  { value: "", label: "Prefiro não informar" },
+  { value: "ate-1000", label: "Até €1.000" },
+  { value: "1000-3000", label: "€1.000 – €3.000" },
+  { value: "3000-7000", label: "€3.000 – €7.000" },
+  { value: "7000+", label: "Acima de €7.000" },
+];
+
+const DEADLINE_OPTIONS = [
+  { value: "", label: "Flexível" },
+  { value: "urgente", label: "O mais rápido possível" },
+  { value: "1-mes", label: "Até 1 mês" },
+  { value: "3-meses", label: "Nos próximos 3 meses" },
+];
 ---
 
 <BaseLayout
@@ -107,32 +128,18 @@ const WEB3FORMS_ACCESS_KEY = "4f3ac30b-9f13-4b79-90bd-2736c2396e99";
 
         <div class="field">
           <label for="service">Tipo de projeto</label>
-          <select id="service" name="service">
-            <option value="">Ainda não sei / outro</option>
-            {SERVICES.map((s) => <option value={s.slug}>{s.title}</option>)}
-          </select>
+          <CustomSelect id="service" name="service" options={SERVICE_OPTIONS} />
         </div>
 
         <div class="field-row">
           <div class="field">
             <label for="budget">Orçamento previsto</label>
-            <select id="budget" name="budget">
-              <option value="">Prefiro não informar</option>
-              <option value="ate-1000">Até €1.000</option>
-              <option value="1000-3000">€1.000 – €3.000</option>
-              <option value="3000-7000">€3.000 – €7.000</option>
-              <option value="7000+">Acima de €7.000</option>
-            </select>
+            <CustomSelect id="budget" name="budget" options={BUDGET_OPTIONS} />
           </div>
 
           <div class="field">
             <label for="deadline">Prazo desejado</label>
-            <select id="deadline" name="deadline">
-              <option value="">Flexível</option>
-              <option value="urgente">O mais rápido possível</option>
-              <option value="1-mes">Até 1 mês</option>
-              <option value="3-meses">Nos próximos 3 meses</option>
-            </select>
+            <CustomSelect id="deadline" name="deadline" options={DEADLINE_OPTIONS} />
           </div>
         </div>
 
