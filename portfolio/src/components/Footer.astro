@@ -77,10 +77,6 @@ const socials = [
 
     <div class="site-footer__bottom">
       <p class="mono">© {year} {SITE.name} — Todos os direitos reservados.</p>
-      <p class="mono site-footer__built">
-        Construído com <a href="https://astro.build" target="_blank" rel="noreferrer">Astro</a> ·
-        instalável como app
-      </p>
     </div>
   </div>
 </footer>
@@ -172,7 +168,7 @@ const socials = [
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: var(--space-12);
     padding-top: var(--space-6);
@@ -183,15 +179,6 @@ const socials = [
     margin: 0;
     font-size: 0.78rem;
     color: var(--paper-faint);
-  }
-
-  .site-footer__built a {
-    color: var(--paper-dim);
-    text-decoration: none;
-  }
-
-  .site-footer__built a:hover {
-    color: var(--brand-blue-soft);
   }
 
   @media (max-width: 900px) {
