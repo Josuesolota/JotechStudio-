@@ -171,6 +171,46 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     ],
   },
   {
+    title: "Digital Lens",
+    slug: "digital-lens",
+    summary:
+      "Agência digital com site institucional, catálogo de serviços em 4 pilares e loja com checkout Stripe — tudo num único PWA instalável.",
+    category: ["web-app", "landing-page"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Stripe", "NextAuth", "Neon"],
+    coverUrl: "/projects/digital-lens-cover.jpg",
+    coverAlt: "Secção da Digital Lens: descrição dos serviços e botão 'Iniciar projeto'",
+    demoUrl: "https://digitallens.vercel.app/",
+    repoUrl: "https://github.com/Josuesolota/Digital_Lens",
+    kind: "case",
+    featured: false,
+    publishedAt: "2026-07-01",
+    body: [
+      {
+        heading: "O problema",
+        paragraphs: [
+          "Uma agência que vende desenvolvimento web, inteligência artificial, marketing digital e locução precisa de um site que prove essa amplitude sem parecer disperso — e, se também vende produtos ou pacotes, uma loja funcional em vez de um link externo avulso.",
+        ],
+      },
+      {
+        heading: "A solução",
+        paragraphs: [
+          "Um site institucional em Next.js organizado em 4 pilares de especialidade — Desenvolvimento Web, Inteligência Artificial, Marketing Digital e Locução & Narração — cada um com o seu catálogo de serviços. Junto, uma loja completa com carrinho, checkout via Stripe e área de cliente protegida por autenticação (NextAuth), tudo servido como PWA instalável, com página própria para funcionar sem rede.",
+        ],
+      },
+      {
+        heading: "O resultado",
+        paragraphs: [
+          "Um único site que funciona como cartão de visita, catálogo e loja — sem depender de plataformas externas de terceiros para vender.",
+        ],
+      },
+    ],
+    results: [
+      "Loja com checkout Stripe e conta de cliente protegida por autenticação",
+      "Catálogo de serviços organizado em 4 pilares de especialidade",
+      "PWA instalável, com página própria para uso sem rede",
+    ],
+  },
+  {
     title: "Loja online — moda local",
     slug: "ecommerce-moda-local",
     summary:
