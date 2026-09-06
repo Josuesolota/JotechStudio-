@@ -177,7 +177,7 @@ export const LOCAL_PROJECTS: LocalProject[] = [
       "Agência digital com site institucional, catálogo de serviços em 4 pilares e loja com checkout Stripe — tudo num único PWA instalável.",
     category: ["web-app", "landing-page"],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Stripe", "NextAuth", "Neon"],
-    coverUrl: "/projects/digital-lens-cover.jpg",
+    coverUrl: "/projects/digital-lens-cover-v2.jpg",
     coverAlt: "Secção da Digital Lens: descrição dos serviços e botão 'Iniciar projeto'",
     demoUrl: "https://digitallens.vercel.app/",
     repoUrl: "https://github.com/Josuesolota/Digital_Lens",
