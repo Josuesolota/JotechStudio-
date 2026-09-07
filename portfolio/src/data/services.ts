@@ -160,7 +160,7 @@ export const FAQ = [
       "Sim. Entrego com um CMS onde altera textos, imagens e publicações sem tocar em código — e mostro como usar numa sessão de formação incluída.",
   },
   {
-    question: "Trabalha com clientes de fora de Portugal?",
+    question: "Trabalha com clientes de fora de Angola?",
     answer:
       "Sim, trabalho 100% remoto com clientes de qualquer país, em português ou inglês. Reuniões por videochamada e entregas acompanhadas online.",
   },

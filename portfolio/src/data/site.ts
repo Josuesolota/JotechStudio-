@@ -23,7 +23,7 @@ export const SITE = {
   themeColor: "#04070f",
   founder: "Josué Solota",
   role: "Desenvolvedor Full-Stack & Trader Algorítmico",
-  location: "Portugal · Remoto para todo o mundo",
+  location: "Angola · Remoto para todo o mundo",
 } as const;
 
 export const CONTACT = {
