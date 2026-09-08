@@ -210,6 +210,48 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     ],
   },
   {
+    title: "Polímata",
+    slug: "polimata",
+    summary:
+      "Plataforma de e-learning gamificada, com cursos de Trading e Oratória & Retórica em texto, áudio e vídeo, XP, sequências diárias e ranking entre alunos.",
+    category: ["web-app", "landing-page"],
+    techStack: ["Next.js", "TypeScript", "MongoDB", "Auth.js", "Tailwind CSS", "PWA"],
+    coverUrl: "/projects/polimata-cover.jpg",
+    coverAlt: "Ícone da Polímata — capelo de formatura com circuito e rede global, em vermelho",
+    demoUrl: "https://polimata-six.vercel.app/",
+    repoUrl: "https://github.com/Josuesolota/Polimata",
+    kind: "case",
+    featured: false,
+    publishedAt: "2026-09-01",
+    body: [
+      {
+        heading: "O problema",
+        paragraphs: [
+          "A maioria dos cursos online termina no vídeo: sem acompanhar o progresso, sem criar hábito de estudo e sem nada que prove a quem está a aprender que está mesmo a avançar — o que faz a maior parte das pessoas desistir a meio.",
+        ],
+      },
+      {
+        heading: "A solução",
+        paragraphs: [
+          "A Polímata organiza o conteúdo em cursos e aulas — texto, áudio e vídeo — sobre Trading e Oratória & Retórica, e transforma o avanço num jogo: XP por aula concluída, sequência diária, dez níveis e distintivos até ao topo, batizado precisamente de 'Polímata'.",
+          "Por trás, um painel de administração próprio gere utilizadores, artigos de blog, aulas, cursos e notificações — tudo servido como PWA instalável, com notificações push e funcionamento offline.",
+        ],
+      },
+      {
+        heading: "O resultado",
+        paragraphs: [
+          "Uma plataforma de e-learning completa — autenticação, base de dados, gamificação e notificações — construída como monorepo com Next.js, já preparada para crescer com novos cursos e formatos.",
+        ],
+      },
+    ],
+    results: [
+      "Cursos em texto, áudio e vídeo, com quiz final e XP por aula",
+      "Gamificação: sequência diária, dez níveis, distintivos e ranking entre alunos",
+      "Painel de administração para cursos, aulas, artigos, utilizadores e notificações",
+      "PWA instalável, com notificações push e modo offline",
+    ],
+  },
+  {
     title: "Loja online — moda local",
     slug: "ecommerce-moda-local",
     summary:
