@@ -125,6 +125,48 @@ export const LOCAL_PROJECTS: LocalProject[] = [
     ],
   },
   {
+    title: "Neon Trading",
+    slug: "neon-trading",
+    summary:
+      "Plataforma de negociação de contratos 'último dígito' na Deriv, com 15 robôs de sinal algorítmicos, gestão de risco automática e interface neon-dark em tempo real.",
+    category: ["fintech-trading", "web-app"],
+    techStack: ["Next.js", "TypeScript", "FastAPI", "Supabase", "Deriv API", "Tailwind CSS"],
+    coverUrl: "/projects/neon-trading-cover.jpg",
+    coverAlt: "Ícone da Neon Trading — gráfico de candlesticks com seta ascendente, em gradiente azul-magenta",
+    demoUrl: "https://neon-trading.vercel.app/",
+    repoUrl: "https://github.com/Josuesolota/Neon-Trading-Platform-",
+    kind: "case",
+    featured: false,
+    publishedAt: "2026-09-10",
+    body: [
+      {
+        heading: "O problema",
+        paragraphs: [
+          "Quem negoceia contratos de 'último dígito' na Deriv (Even/Odd, Over/Under, Matches/Differs) normalmente faz isso à mão — sem gestão de risco automática, sem histórico organizado por produto e a arriscar perder o rasto de um trade aberto se a página recarregar a meio da operação.",
+        ],
+      },
+      {
+        heading: "A solução",
+        paragraphs: [
+          "A Neon Trading liga-se diretamente ao WebSocket da Deriv para ticks, cotações e execução, com 15 robôs de sinal algorítmicos — 5 por produto — que leem apenas estatística de frequência de dígitos, cada um configurável só para alertar ou para negociar em auto-execução. Um gestor de risco aplica stop loss diário, take profit diário e limite de trades por hora, e reconcilia automaticamente contratos abertos se a página recarregar a meio de uma operação.",
+          "O backend, em FastAPI, trata apenas de autenticação (OAuth da Deriv, tokens cifrados com AES-256-GCM) e persistência em Supabase — nunca fica no caminho crítico de uma compra, que vai direta do browser para a Deriv.",
+        ],
+      },
+      {
+        heading: "O resultado",
+        paragraphs: [
+          "Uma interface neon-dark bilingue (PT/EN), pensada para sessões longas de ecrã, com histórico e análise — curva de capital, taxa de ganho e distribuição por produto — para quem quer negociar com disciplina em vez de instinto.",
+        ],
+      },
+    ],
+    results: [
+      "15 robôs de sinal algorítmicos (5 por produto), com alerta ou auto-execução",
+      "Gestão de risco: stop loss diário, take profit diário, limite de trades por hora",
+      "Reconciliação automática de contratos abertos após recarregar a página",
+      "Histórico e análise com curva de capital e taxa de ganho, em PT/EN",
+    ],
+  },
+  {
     // Nota: este é o site de apresentação/conversão da Kairos
     // (landing-page-kairos-bay.vercel.app) — distinto da própria plataforma
     // (app, em kairos-lemon-rho.vercel.app), que é gerida separadamente no
