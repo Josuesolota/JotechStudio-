@@ -258,7 +258,7 @@ export const LOCAL_PROJECTS: LocalProject[] = [
       "Plataforma de e-learning gamificada, com cursos de Trading e Oratória & Retórica em texto, áudio e vídeo, XP, sequências diárias e ranking entre alunos.",
     category: ["web-app", "landing-page"],
     techStack: ["Next.js", "TypeScript", "MongoDB", "Auth.js", "Tailwind CSS", "PWA"],
-    coverUrl: "/projects/polimata-cover-v2.jpg",
+    coverUrl: "/projects/polimata-cover-v3.jpg",
     coverAlt: "Ícone da Polímata — capelo de formatura com circuito e rede global, em vermelho",
     demoUrl: "https://polimata-six.vercel.app/",
     repoUrl: "https://github.com/Josuesolota/Polimata",
